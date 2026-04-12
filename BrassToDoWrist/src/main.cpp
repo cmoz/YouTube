@@ -29,8 +29,8 @@ GxEPD2_3C<GxEPD2_213_Z98c, GxEPD2_213_Z98c::HEIGHT> *display = nullptr;
 // GxEPD2_BW<GxEPD2_213_BN, GxEPD2_213_BN::HEIGHT> display(GxEPD2_213_BN(CS_PIN, DC_PIN, RST_PIN, -1));
 //GxEPD2_3C<GxEPD2_213_Z98c, GxEPD2_213_Z98c::HEIGHT> display(GxEPD2_213_Z98c(CS_PIN, DC_PIN, RST_PIN, BUSY_PIN));
 
-const char *ssid = "Salty Dog Sync";
-const char *password = "g!00scap";
+const char *ssid = "CHANGE THIS TO YOUR WIFI";
+const char *password = "CHANGE THIS TO YOUR PASSWORD";
 // AP mode credentials
 const char *ap_ssid = "Todo-Wrist";
 const char *ap_password = "tinkertailor";
