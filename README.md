@@ -38,7 +38,7 @@ Every project folder includes a link back to its video, a parts list, and any wi
 1. Install [VS Code](https://code.visualstudio.com/) + the [PlatformIO extension](https://platformio.org/)
 2. Clone this repo:
    ```bash
-   git clone https://github.com/YOUR-USERNAME/cmozmaker-projects.git
+   git clone https://github.com/cmoz/YouTube.git
    ```
 3. Open the project folder you want in PlatformIO
 4. Plug in your board, hit **Upload**, and you're off
