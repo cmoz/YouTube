@@ -2,7 +2,7 @@
 
 > A wrist-worn brass to-do list: a 2.13" tri-colour ePaper display driven by an ESP32-C3 Super Mini, with tasks you set from your phone and tick off from a wee web page — then it deep sleeps until you need it again.
 
-📺 **Watch the build:** [CMozMaker on YouTube]([https://www.youtube.com/@CMozMaker](https://youtu.be/K9FJABPhAVQ?si=i8G1BlJxP9BpYZIs))
+📺 **Watch the build:** [CMozMaker on YouTube](https://youtu.be/K9FJABPhAVQ?si=i8G1BlJxP9BpYZIs)
 🛒 **Get the parts:** [Tinker Tailor](https://tinkertailor.ca)
 
 ---
