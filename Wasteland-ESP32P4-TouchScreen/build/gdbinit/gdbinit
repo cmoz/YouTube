@@ -1,0 +1,2 @@
+source C:/Espressif/projects/Wasteland/build/gdbinit/symbols
+source C:/Espressif/projects/Wasteland/build/gdbinit/connect
