@@ -2,7 +2,7 @@
 
 > A WeAct 2.13" tri-colour ePaper display on an ESP32 that shows the CMozMaker logo and shuffles its background and text colours every five seconds — the perfect first ePaper project, and a great way to test that your display wiring works.
 
-📺 **Watch the build:** [CMozMaker on YouTube]([https://www.youtube.com/@CMozMaker](https://youtu.be/Ww5av-e-W50?si=3ih6utYX0S91tld-))
+📺 **Watch the build:** [CMozMaker on YouTube](https://youtu.be/Ww5av-e-W50?si=3ih6utYX0S91tld-)
 🛒 **Get the parts:** [Tinker Tailor](https://tinkertailor.ca)
 
 ---
