@@ -93,6 +93,7 @@ idf.py -p COM13 flash monitor
 - **Windows path length limit** can break ESP-IDF builds in deeply nested folders. Keep the project close to the drive root (e.g. `C:\proj\wasteland`) or enable long paths in Windows.
 - **No sound?** Remember the amp enable on GPIO 30 is active LOW. Also check the on-screen mute toggle — muting is wired through the shell.
 - **`sdkconfig.defaults`** carries the display and PSRAM settings this board needs — if you delete your `sdkconfig` to start fresh, those defaults regenerate it correctly.
+- **Stuck, or built something cool?** Join us in [Discussions](https://github.com/cmoz/YouTube/discussions) — ask questions, share your builds, and suggest future videos.
 
 ## Make it yours
 
