@@ -3,3 +3,56 @@
 .vscode/c_cpp_properties.json
 .vscode/launch.json
 .vscode/ipch
+
+# PlatformIO build files
+.pio/
+.pioenvs/
+.pio/libdeps/
+.pio/build/
+
+# Arduino build files
+*.elf
+*.bin
+*.hex
+*.eep
+
+# VSCode
+.vscode/
+.vscode/ipch/
+.vscode/.browse*
+
+# CLion / JetBrains
+.idea/
+
+# CMake build folders
+build/
+cmake-build-*/
+
+# Logs
+*.log
+
+# OS-specific junk
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Python virtual environments (if used)
+venv/
+.env/
+
+# Backup files
+*.bak
+*.tmp
+*.swp
+
+# Node (if you ever use it for tooling)
+node_modules/
+
+# Compiled objects
+*.o
+*.obj
+*.a
+*.so
+*.dll
+*.exe
+
