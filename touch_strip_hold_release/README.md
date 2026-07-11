@@ -69,6 +69,7 @@ Worth reading even if you just want to use it — these techniques transfer to a
 - **Restart after wearing it differently.** Baselines are captured at power-up, so if the sleeve shifts against your skin significantly, a quick reset recalibrates everything.
 - **Tune to your fabric:** if your pads are larger, smaller, or a different conductive fabric, adjust `ON_DELTA` and `OFF_DELTA` in the sketch.
 - **Change `STRIP_COUNT`** to match your LED strip length, and mind your power budget — 38 LEDs at full white is more than a small battery likes. `BRIGHTNESS` is capped at 140 for a reason.
+- **Stuck, or built something cool?** Join us in [Discussions](https://github.com/cmoz/YouTube/discussions) — ask questions, share your builds, and suggest future videos.
 
 ## Make it yours
 
