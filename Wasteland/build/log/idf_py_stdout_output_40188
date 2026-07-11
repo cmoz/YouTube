@@ -1,0 +1,33 @@
+Command: cmake -G Ninja -DPYTHON_DEPS_CHECKED=1 -DPYTHON=C:\Espressif\python_env\idf5.5_py3.12_env\Scripts\python.exe -DESP_PLATFORM=1 -DCCACHE_ENABLE=1 C:\Espressif\projects\Wasteland
+-- IDF_TARGET is not set, guessed 'esp32p4' from sdkconfig 'C:/Espressif/projects/Wasteland/sdkconfig'
+-- Found Git: C:/Program Files/Git/cmd/git.exe (found version "2.51.2.windows.1")
+-- git describe returned 'fatal: 'git status --porcelain=2' failed in submodule vendor/c_exception
+fatal: 'git status --porcelain=2' failed in submodule components/cmock/CMock'
+-- Minimal build - OFF
+-- ccache will be used for faster recompilation
+-- The C compiler identification is GNU 14.2.0
+-- The CXX compiler identification is GNU 14.2.0
+-- The ASM compiler identification is GNU
+-- Found assembler: C:/Espressif/tools/riscv32-esp-elf/esp-14.2.0_20251107/riscv32-esp-elf/bin/riscv32-esp-elf-gcc.exe
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: C:/Espressif/tools/riscv32-esp-elf/esp-14.2.0_20251107/riscv32-esp-elf/bin/riscv32-esp-elf-gcc.exe - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: C:/Espressif/tools/riscv32-esp-elf/esp-14.2.0_20251107/riscv32-esp-elf/bin/riscv32-esp-elf-g++.exe - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- git rev-parse returned 'fatal: not a git repository (or any of the parent directories): .git'
+-- Could not use 'git describe' to determine PROJECT_VER.
+-- Building ESP-IDF components for target esp32p4
+NOTICE: Processing 7 dependencies:
+NOTICE: [1/7] espressif/cmake_utilities (0.5.3)
+NOTICE: [2/7] espressif/esp_lcd_ek79007 (1.0.4)
+NOTICE: [3/7] espressif/esp_lcd_touch (1.2.1)
+NOTICE: [4/7] espressif/esp_lcd_touch_gt911 (1.2.0~2)
+NOTICE: [5/7] espressif/esp_lvgl_port (2.8.0~1)
+NOTICE: [6/7] lvgl/lvgl (9.5.0)
+NOTICE: [7/7] idf (5.5.3)
+-- Configuring incomplete, errors occurred!

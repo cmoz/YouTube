@@ -1,0 +1,82 @@
+Command: ninja flash
+[1/10] Performing build step for 'bootloader'
+[1/1] C:\Windows\system32\cmd.exe /C "cd /D C:\Espressif\projects\Wasteland\build\bootloader\esp-idf\esptool_py && C:\Espressif\python_env\idf5.5_py3.12_env\Scripts\python.exe C:/Espressif/v5.5.3/components/partition_table/check_sizes.py --offset 0x8000 bootloader 0x2000 C:/Espressif/projects/Wasteland/build/bootloader/bootloader.bin"
+Bootloader binary size 0x5dd0 bytes. 0x230 bytes (2%) free.
+[2/10] No install step for 'bootloader'
+[3/10] Completed 'bootloader'
+[4/10] Building C object esp-idf/main/CMakeFiles/__idf_main.dir/modes/mode_tools.c.obj
+[5/10] Linking C static library esp-idf\main\libmain.a
+[6/10] Generating esp-idf/esp_system/ld/sections.ld
+[7/10] Linking CXX executable Wasteland.elf
+[8/10] Generating binary image from built executable
+esptool.py v4.12.dev1
+Creating esp32p4 image...
+Merged 3 ELF sections
+Successfully created esp32p4 image.
+Generated C:/Espressif/projects/Wasteland/build/Wasteland.bin
+[9/10] C:\Windows\system32\cmd.exe /C "cd /D C:\Espressif\projects\Wasteland\build\esp-idf\esptool_py && C:\Espressif\python_env\idf5.5_py3.12_env\Scripts\python.exe C:/Espressif/v5.5.3/components/partition_table/check_sizes.py --offset 0x8000 partition --type app C:/Espressif/projects/Wasteland/build/partition_table/partition-table.bin C:/Espressif/projects/Wasteland/build/Wasteland.bin"
+Wasteland.bin binary size 0xcf210 bytes. Smallest app partition is 0x3f0000 bytes. 0x320df0 bytes (79%) free.
+[9/10] C:\Windows\system32\cmd.exe /C "cd /D C:\Espressif\v5.5.3\components\esptool_py && C:\Espressif\tools\cmake\3.30.2\bin\cmake.exe -D IDF_PATH=C:/Espressif/v5.5.3 -D SERIAL_TOOL=C:/Espressif/python_env/idf5.5_py3.12_env/Scripts/python.exe;;C:/Espressif/v5.5.3/components/esptool_py/esptool/esptool.py;--chip;esp32p4 -D SERIAL_TOOL_ARGS=--before=default_reset;--after=hard_reset;write_flash;@flash_args -D WORKING_DIRECTORY=C:/Espressif/projects/Wasteland/build -P C:/Espressif/v5.5.3/components/esptool_py/run_serial_tool.cmake"
+esptool.py --chip esp32p4 -p COM14 -b 460800 --before=default_reset --after=hard_reset write_flash --flash_mode dio --flash_freq 80m --flash_size 16MB 0x2000 bootloader/bootloader.bin 0x10000 Wasteland.bin 0x8000 partition_table/partition-table.bin 0xd000 ota_data_initial.bin
+esptool.py v4.12.dev1
+Serial port COM14
+Connecting....
+Chip is ESP32-P4 (revision v1.3)
+Features: High-Performance MCU
+Crystal is 40MHz
+MAC: 30:ed:a0:e9:f0:82
+Uploading stub...
+Running stub...
+Stub running...
+Changing baud rate to 460800
+Changed.
+Configuring flash size...
+Flash will be erased from 0x00002000 to 0x00007fff...
+Flash will be erased from 0x00010000 to 0x000dffff...
+Flash will be erased from 0x00008000 to 0x00008fff...
+Flash will be erased from 0x0000d000 to 0x0000efff...
+SHA digest in image updated
+Compressed 24016 bytes to 14860...
+Writing at 0x00002000... (100 %)
+Wrote 24016 bytes (14860 compressed) at 0x00002000 in 0.7 seconds (effective 279.3 kbit/s)...
+Hash of data verified.
+Compressed 848400 bytes to 421638...
+Writing at 0x00010000... (3 %)
+Writing at 0x0001bb9e... (7 %)
+Writing at 0x00024cf1... (11 %)
+Writing at 0x0002d85c... (15 %)
+Writing at 0x0003d5b9... (19 %)
+Writing at 0x0004a60a... (23 %)
+Writing at 0x0005118f... (26 %)
+Writing at 0x000584af... (30 %)
+Writing at 0x0005ff50... (34 %)
+Writing at 0x00067a40... (38 %)
+Writing at 0x0006e9da... (42 %)
+Writing at 0x00074d52... (46 %)
+Writing at 0x0007b1ba... (50 %)
+Writing at 0x00082090... (53 %)
+Writing at 0x000888c7... (57 %)
+Writing at 0x0008eaac... (61 %)
+Writing at 0x00094af2... (65 %)
+Writing at 0x0009ad20... (69 %)
+Writing at 0x000a165d... (73 %)
+Writing at 0x000ac5db... (76 %)
+Writing at 0x000b41db... (80 %)
+Writing at 0x000bbad1... (84 %)
+Writing at 0x000c34ba... (88 %)
+Writing at 0x000ca334... (92 %)
+Writing at 0x000d128c... (96 %)
+Writing at 0x000d8647... (100 %)
+Wrote 848400 bytes (421638 compressed) at 0x00010000 in 10.3 seconds (effective 658.4 kbit/s)...
+Hash of data verified.
+Compressed 3072 bytes to 143...
+Writing at 0x00008000... (100 %)
+Wrote 3072 bytes (143 compressed) at 0x00008000 in 0.1 seconds (effective 424.9 kbit/s)...
+Hash of data verified.
+Compressed 8192 bytes to 31...
+Writing at 0x0000d000... (100 %)
+Wrote 8192 bytes (31 compressed) at 0x0000d000 in 0.1 seconds (effective 778.2 kbit/s)...
+Hash of data verified.
+
+Leaving...
+Hard resetting via RTS pin...

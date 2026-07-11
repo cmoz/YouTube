@@ -1,0 +1,73 @@
+Command: ninja flash
+[1/5] C:\Windows\system32\cmd.exe /C "cd /D C:\Espressif\projects\Wasteland\build\esp-idf\esptool_py && C:\Espressif\python_env\idf5.5_py3.12_env\Scripts\python.exe C:/Espressif/v5.5.3/components/partition_table/check_sizes.py --offset 0x8000 partition --type app C:/Espressif/projects/Wasteland/build/partition_table/partition-table.bin C:/Espressif/projects/Wasteland/build/Wasteland.bin"
+Wasteland.bin binary size 0xd85e0 bytes. Smallest app partition is 0x3f0000 bytes. 0x317a20 bytes (79%) free.
+[2/5] Performing build step for 'bootloader'
+[1/1] C:\Windows\system32\cmd.exe /C "cd /D C:\Espressif\projects\Wasteland\build\bootloader\esp-idf\esptool_py && C:\Espressif\python_env\idf5.5_py3.12_env\Scripts\python.exe C:/Espressif/v5.5.3/components/partition_table/check_sizes.py --offset 0x8000 bootloader 0x2000 C:/Espressif/projects/Wasteland/build/bootloader/bootloader.bin"
+Bootloader binary size 0x5dd0 bytes. 0x230 bytes (2%) free.
+[3/5] No install step for 'bootloader'
+[4/5] Completed 'bootloader'
+[4/5] C:\Windows\system32\cmd.exe /C "cd /D C:\Espressif\v5.5.3\components\esptool_py && C:\Espressif\tools\cmake\3.30.2\bin\cmake.exe -D IDF_PATH=C:/Espressif/v5.5.3 -D SERIAL_TOOL=C:/Espressif/python_env/idf5.5_py3.12_env/Scripts/python.exe;;C:/Espressif/v5.5.3/components/esptool_py/esptool/esptool.py;--chip;esp32p4 -D SERIAL_TOOL_ARGS=--before=default_reset;--after=hard_reset;write_flash;@flash_args -D WORKING_DIRECTORY=C:/Espressif/projects/Wasteland/build -P C:/Espressif/v5.5.3/components/esptool_py/run_serial_tool.cmake"
+esptool.py --chip esp32p4 -p COM14 -b 460800 --before=default_reset --after=hard_reset write_flash --flash_mode dio --flash_freq 80m --flash_size 16MB 0x2000 bootloader/bootloader.bin 0x10000 Wasteland.bin 0x8000 partition_table/partition-table.bin 0xd000 ota_data_initial.bin
+esptool.py v4.12.dev1
+Serial port COM14
+Connecting....
+Chip is ESP32-P4 (revision v1.3)
+Features: High-Performance MCU
+Crystal is 40MHz
+MAC: 30:ed:a0:e9:f0:82
+Uploading stub...
+Running stub...
+Stub running...
+Changing baud rate to 460800
+Changed.
+Configuring flash size...
+Flash will be erased from 0x00002000 to 0x00007fff...
+Flash will be erased from 0x00010000 to 0x000e8fff...
+Flash will be erased from 0x00008000 to 0x00008fff...
+Flash will be erased from 0x0000d000 to 0x0000efff...
+SHA digest in image updated
+Compressed 24016 bytes to 14860...
+Writing at 0x00002000... (100 %)
+Wrote 24016 bytes (14860 compressed) at 0x00002000 in 0.7 seconds (effective 275.2 kbit/s)...
+Hash of data verified.
+Compressed 886240 bytes to 441072...
+Writing at 0x00010000... (3 %)
+Writing at 0x0001b5c9... (7 %)
+Writing at 0x000252f6... (11 %)
+Writing at 0x0002da29... (14 %)
+Writing at 0x0003b62a... (18 %)
+Writing at 0x0004b56f... (22 %)
+Writing at 0x00051958... (25 %)
+Writing at 0x00058adf... (29 %)
+Writing at 0x00060642... (33 %)
+Writing at 0x00067d18... (37 %)
+Writing at 0x0006f04f... (40 %)
+Writing at 0x00075b33... (44 %)
+Writing at 0x0007bbdc... (48 %)
+Writing at 0x00082357... (51 %)
+Writing at 0x0008966a... (55 %)
+Writing at 0x0008f5a9... (59 %)
+Writing at 0x000956e4... (62 %)
+Writing at 0x0009b5ef... (66 %)
+Writing at 0x000a1cb8... (70 %)
+Writing at 0x000aacd2... (74 %)
+Writing at 0x000b4bb2... (77 %)
+Writing at 0x000bbe78... (81 %)
+Writing at 0x000c2993... (85 %)
+Writing at 0x000ca9ad... (88 %)
+Writing at 0x000d1e80... (92 %)
+Writing at 0x000d922d... (96 %)
+Writing at 0x000e05b5... (100 %)
+Wrote 886240 bytes (441072 compressed) at 0x00010000 in 10.7 seconds (effective 659.7 kbit/s)...
+Hash of data verified.
+Compressed 3072 bytes to 143...
+Writing at 0x00008000... (100 %)
+Wrote 3072 bytes (143 compressed) at 0x00008000 in 0.1 seconds (effective 448.0 kbit/s)...
+Hash of data verified.
+Compressed 8192 bytes to 31...
+Writing at 0x0000d000... (100 %)
+Wrote 8192 bytes (31 compressed) at 0x0000d000 in 0.1 seconds (effective 768.2 kbit/s)...
+Hash of data verified.
+
+Leaving...
+Hard resetting via RTS pin...

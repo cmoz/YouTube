@@ -1,0 +1,38 @@
+Command: cmake -G Ninja -DPYTHON_DEPS_CHECKED=1 -DPYTHON=C:\Espressif\python_env\idf5.5_py3.12_env\Scripts\python.exe -DESP_PLATFORM=1 -DCCACHE_ENABLE=1 C:\Espressif\projects\Wasteland
+CMake Error at C:/Espressif/v5.5.3/tools/cmake/component.cmake:231 (message):
+  CMake Warning (dev) at build_properties.temp.cmake:8:
+
+    Syntax Warning in cmake code at column 106
+
+  
+
+    Argument not separated from preceding token by whitespace.
+
+  Call Stack (most recent call first):
+
+    C:/Espressif/v5.5.3/tools/cmake/scripts/component_get_requirements.cmake:3 (include)
+
+  This warning is for project developers.  Use -Wno-dev to suppress it.
+
+
+
+  CMake Error at C:/Espressif/projects/Wasteland/main/CMakeLists.txt:1
+  (FILE):
+
+    CONFIGURE_DEPENDS is invalid for script and find package modes.
+
+  Call Stack (most recent call first):
+
+    C:/Espressif/v5.5.3/tools/cmake/scripts/component_get_requirements.cmake:107 (include)
+    C:/Espressif/v5.5.3/tools/cmake/scripts/component_get_requirements.cmake:160 (__component_get_requirements)
+
+  
+
+
+
+Call Stack (most recent call first):
+  C:/Espressif/v5.5.3/tools/cmake/build.cmake:666 (__component_get_requirements)
+  C:/Espressif/v5.5.3/tools/cmake/project.cmake:741 (idf_build_process)
+  CMakeLists.txt:6 (project)
+
+

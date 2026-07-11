@@ -1,0 +1,54 @@
+Command: ninja all
+[1/32] Building C object esp-idf/main/CMakeFiles/__idf_main.dir/data/creative_prompts.c.obj
+[2/32] Building C object esp-idf/main/CMakeFiles/__idf_main.dir/data/component_list.c.obj
+[3/32] Building C object esp-idf/main/CMakeFiles/__idf_main.dir/modes/geiger_log.c.obj
+[4/32] Building C object esp-idf/main/CMakeFiles/__idf_main.dir/modes/mode_dormant.c.obj
+[5/32] Building C object esp-idf/main/CMakeFiles/__idf_main.dir/modes/mode_log.c.obj
+[6/32] Building C object esp-idf/main/CMakeFiles/__idf_main.dir/data/tutorial_list.c.obj
+[7/32] Building C object esp-idf/espressif__led_strip/CMakeFiles/__idf_espressif__led_strip.dir/src/led_strip_rmt_encoder.c.obj
+[8/32] Building C object esp-idf/main/CMakeFiles/__idf_main.dir/lib/qrcode.c.obj
+C:/Espressif/projects/Wasteland/main/lib/qrcode.c: In function 'qrcode_getModule':
+C:/Espressif/projects/Wasteland/main/lib/qrcode.c:862:11: warning: comparison is always false due to limited range of data type [-Wtype-limits]
+  862 |     if (x < 0 || x >= qrcode->size || y < 0 || y >= qrcode->size) {
+      |           ^
+C:/Espressif/projects/Wasteland/main/lib/qrcode.c:862:41: warning: comparison is always false due to limited range of data type [-Wtype-limits]
+  862 |     if (x < 0 || x >= qrcode->size || y < 0 || y >= qrcode->size) {
+      |                                         ^
+[9/32] Building C object esp-idf/main/CMakeFiles/__idf_main.dir/sensors/hcsr04.c.obj
+[10/32] Building C object esp-idf/main/CMakeFiles/__idf_main.dir/audio/audio.c.obj
+[11/32] Performing build step for 'bootloader'
+[1/1] C:\Windows\system32\cmd.exe /C "cd /D C:\Espressif\projects\Wasteland\build\bootloader\esp-idf\esptool_py && C:\Espressif\python_env\idf5.5_py3.12_env\Scripts\python.exe C:/Espressif/v5.5.3/components/partition_table/check_sizes.py --offset 0x8000 bootloader 0x2000 C:/Espressif/projects/Wasteland/build/bootloader/bootloader.bin"
+Bootloader binary size 0x5dd0 bytes. 0x230 bytes (2%) free.
+[12/32] No install step for 'bootloader'
+[13/32] Completed 'bootloader'
+[14/32] Building C object esp-idf/espressif__led_strip/CMakeFiles/__idf_espressif__led_strip.dir/src/led_strip_api.c.obj
+[15/32] Building C object esp-idf/main/CMakeFiles/__idf_main.dir/modes/mode_placeholder.c.obj
+[16/32] Building C object esp-idf/main/CMakeFiles/__idf_main.dir/leds/ws2812.c.obj
+[17/32] Building C object esp-idf/espressif__led_strip/CMakeFiles/__idf_espressif__led_strip.dir/src/led_strip_rmt_dev.c.obj
+[18/32] Building C object esp-idf/main/CMakeFiles/__idf_main.dir/modes/mode_cmoz.c.obj
+[19/32] Building C object esp-idf/main/CMakeFiles/__idf_main.dir/modes/mode_cmoz_qr.c.obj
+[20/32] Building C object esp-idf/espressif__led_strip/CMakeFiles/__idf_espressif__led_strip.dir/src/led_strip_spi_dev.c.obj
+[21/32] Building C object esp-idf/main/CMakeFiles/__idf_main.dir/modes/mode_play.c.obj
+[22/32] Building C object esp-idf/main/CMakeFiles/__idf_main.dir/modes/mode_geiger.c.obj
+[23/32] Building C object esp-idf/main/CMakeFiles/__idf_main.dir/modes/mode_tools.c.obj
+C:/Espressif/projects/Wasteland/main/modes/mode_tools.c:491:18: warning: 'build_stub_panel' defined but not used [-Wunused-function]
+  491 | static lv_obj_t *build_stub_panel(lv_obj_t *parent, const char *title)
+      |                  ^~~~~~~~~~~~~~~~
+[24/32] Linking C static library esp-idf\espressif__led_strip\libespressif__led_strip.a
+[25/32] Building C object esp-idf/main/CMakeFiles/__idf_main.dir/ui/ui_shell.c.obj
+C:/Espressif/projects/Wasteland/main/ui/ui_shell.c:107:13: warning: 'glitch_timer_cb' defined but not used [-Wunused-function]
+  107 | static void glitch_timer_cb(lv_timer_t *t)
+      |             ^~~~~~~~~~~~~~~
+[26/32] Building C object esp-idf/main/CMakeFiles/__idf_main.dir/main.c.obj
+[27/32] Linking C static library esp-idf\main\libmain.a
+[28/32] Generating esp-idf/esp_system/ld/sections.ld
+[29/32] Building C object CMakeFiles/Wasteland.elf.dir/project_elf_src_esp32p4.c.obj
+[30/32] Linking CXX executable Wasteland.elf
+[31/32] Generating binary image from built executable
+esptool.py v4.12.dev1
+Creating esp32p4 image...
+Merged 3 ELF sections
+Successfully created esp32p4 image.
+Generated C:/Espressif/projects/Wasteland/build/Wasteland.bin
+[32/32] C:\Windows\system32\cmd.exe /C "cd /D C:\Espressif\projects\Wasteland\build\esp-idf\esptool_py && C:\Espressif\python_env\idf5.5_py3.12_env\Scripts\python.exe C:/Espressif/v5.5.3/components/partition_table/check_sizes.py --offset 0x8000 partition --type app C:/Espressif/projects/Wasteland/build/partition_table/partition-table.bin C:/Espressif/projects/Wasteland/build/Wasteland.bin"
+Wasteland.bin binary size 0xd85e0 bytes. Smallest app partition is 0x3f0000 bytes. 0x317a20 bytes (79%) free.

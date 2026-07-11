@@ -1,0 +1,15 @@
+Command: cmake -G Ninja -DPYTHON_DEPS_CHECKED=1 -DPYTHON=C:\Espressif\python_env\idf5.5_py3.12_env\Scripts\python.exe -DESP_PLATFORM=1 -DCCACHE_ENABLE=1 C:\Espressif\projects\Wasteland
+-- Minimal build - OFF
+-- ccache will be used for faster recompilation
+-- git rev-parse returned 'fatal: not a git repository (or any of the parent directories): .git'
+-- Could not use 'git describe' to determine PROJECT_VER.
+-- Building ESP-IDF components for target esp32p4
+NOTICE: Processing 7 dependencies:
+NOTICE: [1/7] espressif/cmake_utilities (0.5.3)
+NOTICE: [2/7] espressif/esp_lcd_ek79007 (1.0.4)
+NOTICE: [3/7] espressif/esp_lcd_touch (1.2.1)
+NOTICE: [4/7] espressif/esp_lcd_touch_gt911 (1.2.0~2)
+NOTICE: [5/7] espressif/esp_lvgl_port (2.8.0~1)
+NOTICE: [6/7] lvgl/lvgl (9.5.0)
+NOTICE: [7/7] idf (5.5.3)
+-- Configuring incomplete, errors occurred!

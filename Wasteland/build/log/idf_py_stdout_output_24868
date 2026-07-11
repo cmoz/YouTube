@@ -1,0 +1,98 @@
+Command: ninja flash
+[1/18] Performing build step for 'bootloader'
+[1/1] C:\Windows\system32\cmd.exe /C "cd /D C:\Espressif\projects\Wasteland\build\bootloader\esp-idf\esptool_py && C:\Espressif\python_env\idf5.5_py3.12_env\Scripts\python.exe C:/Espressif/v5.5.3/components/partition_table/check_sizes.py --offset 0x8000 bootloader 0x2000 C:/Espressif/projects/Wasteland/build/bootloader/bootloader.bin"
+Bootloader binary size 0x5dd0 bytes. 0x230 bytes (2%) free.
+[2/18] No install step for 'bootloader'
+[3/18] Completed 'bootloader'
+[4/18] Building C object esp-idf/main/CMakeFiles/__idf_main.dir/modes/mode_cmoz_qr.c.obj
+[5/18] Building C object esp-idf/main/CMakeFiles/__idf_main.dir/modes/mode_demo.c.obj
+[6/18] Building C object esp-idf/main/CMakeFiles/__idf_main.dir/modes/mode_placeholder.c.obj
+[7/18] Building C object esp-idf/main/CMakeFiles/__idf_main.dir/modes/mode_play.c.obj
+[8/18] Building C object esp-idf/main/CMakeFiles/__idf_main.dir/ui/ui_shell.c.obj
+C:/Espressif/projects/Wasteland/main/ui/ui_shell.c:107:13: warning: 'glitch_timer_cb' defined but not used [-Wunused-function]
+  107 | static void glitch_timer_cb(lv_timer_t *t)
+      |             ^~~~~~~~~~~~~~~
+[9/18] Building C object esp-idf/main/CMakeFiles/__idf_main.dir/modes/mode_cmoz.c.obj
+[10/18] Building C object esp-idf/main/CMakeFiles/__idf_main.dir/modes/mode_tools.c.obj
+C:/Espressif/projects/Wasteland/main/modes/mode_tools.c:491:18: warning: 'build_stub_panel' defined but not used [-Wunused-function]
+  491 | static lv_obj_t *build_stub_panel(lv_obj_t *parent, const char *title)
+      |                  ^~~~~~~~~~~~~~~~
+[11/18] Building C object esp-idf/main/CMakeFiles/__idf_main.dir/modes/mode_geiger.c.obj
+[12/18] Building C object esp-idf/main/CMakeFiles/__idf_main.dir/main.c.obj
+[13/18] Linking C static library esp-idf\main\libmain.a
+[14/18] Generating esp-idf/esp_system/ld/sections.ld
+[15/18] Linking CXX executable Wasteland.elf
+[16/18] Generating binary image from built executable
+esptool.py v4.12.dev1
+Creating esp32p4 image...
+Merged 3 ELF sections
+Successfully created esp32p4 image.
+Generated C:/Espressif/projects/Wasteland/build/Wasteland.bin
+[17/18] C:\Windows\system32\cmd.exe /C "cd /D C:\Espressif\projects\Wasteland\build\esp-idf\esptool_py && C:\Espressif\python_env\idf5.5_py3.12_env\Scripts\python.exe C:/Espressif/v5.5.3/components/partition_table/check_sizes.py --offset 0x8000 partition --type app C:/Espressif/projects/Wasteland/build/partition_table/partition-table.bin C:/Espressif/projects/Wasteland/build/Wasteland.bin"
+Wasteland.bin binary size 0xe4650 bytes. Smallest app partition is 0x3f0000 bytes. 0x30b9b0 bytes (77%) free.
+[17/18] C:\Windows\system32\cmd.exe /C "cd /D C:\Espressif\v5.5.3\components\esptool_py && C:\Espressif\tools\cmake\3.30.2\bin\cmake.exe -D IDF_PATH=C:/Espressif/v5.5.3 -D SERIAL_TOOL=C:/Espressif/python_env/idf5.5_py3.12_env/Scripts/python.exe;;C:/Espressif/v5.5.3/components/esptool_py/esptool/esptool.py;--chip;esp32p4 -D SERIAL_TOOL_ARGS=--before=default_reset;--after=hard_reset;write_flash;@flash_args -D WORKING_DIRECTORY=C:/Espressif/projects/Wasteland/build -P C:/Espressif/v5.5.3/components/esptool_py/run_serial_tool.cmake"
+esptool.py --chip esp32p4 -p COM18 -b 460800 --before=default_reset --after=hard_reset write_flash --flash_mode dio --flash_freq 80m --flash_size 16MB 0x2000 bootloader/bootloader.bin 0x10000 Wasteland.bin 0x8000 partition_table/partition-table.bin 0xd000 ota_data_initial.bin
+esptool.py v4.12.dev1
+Serial port COM18
+Connecting....
+Chip is ESP32-P4 (revision v1.3)
+Features: High-Performance MCU
+Crystal is 40MHz
+MAC: 30:ed:a0:e9:f0:82
+Uploading stub...
+Running stub...
+Stub running...
+Changing baud rate to 460800
+Changed.
+Configuring flash size...
+Flash will be erased from 0x00002000 to 0x00007fff...
+Flash will be erased from 0x00010000 to 0x000f4fff...
+Flash will be erased from 0x00008000 to 0x00008fff...
+Flash will be erased from 0x0000d000 to 0x0000efff...
+SHA digest in image updated
+Compressed 24016 bytes to 14860...
+Writing at 0x00002000... (100 %)
+Wrote 24016 bytes (14860 compressed) at 0x00002000 in 0.7 seconds (effective 274.6 kbit/s)...
+Hash of data verified.
+Compressed 935504 bytes to 458087...
+Writing at 0x00010000... (3 %)
+Writing at 0x0001b534... (7 %)
+Writing at 0x000252d7... (10 %)
+Writing at 0x0002d9d9... (14 %)
+Writing at 0x0003a19f... (17 %)
+Writing at 0x00048ea1... (21 %)
+Writing at 0x0005701c... (25 %)
+Writing at 0x0005d708... (28 %)
+Writing at 0x0006435d... (32 %)
+Writing at 0x0006c0b4... (35 %)
+Writing at 0x00073a1d... (39 %)
+Writing at 0x0007ae24... (42 %)
+Writing at 0x00081f1d... (46 %)
+Writing at 0x00088407... (50 %)
+Writing at 0x0008e729... (53 %)
+Writing at 0x00095099... (57 %)
+Writing at 0x0009bfc7... (60 %)
+Writing at 0x000a2005... (64 %)
+Writing at 0x000a8152... (67 %)
+Writing at 0x000ade8e... (71 %)
+Writing at 0x000b47b9... (75 %)
+Writing at 0x000be7fd... (78 %)
+Writing at 0x000c7a41... (82 %)
+Writing at 0x000cf36f... (85 %)
+Writing at 0x000d57d5... (89 %)
+Writing at 0x000dd759... (92 %)
+Writing at 0x000e4e23... (96 %)
+Writing at 0x000ec268... (100 %)
+Wrote 935504 bytes (458087 compressed) at 0x00010000 in 11.3 seconds (effective 663.2 kbit/s)...
+Hash of data verified.
+Compressed 3072 bytes to 143...
+Writing at 0x00008000... (100 %)
+Wrote 3072 bytes (143 compressed) at 0x00008000 in 0.1 seconds (effective 442.9 kbit/s)...
+Hash of data verified.
+Compressed 8192 bytes to 31...
+Writing at 0x0000d000... (100 %)
+Wrote 8192 bytes (31 compressed) at 0x0000d000 in 0.1 seconds (effective 812.4 kbit/s)...
+Hash of data verified.
+
+Leaving...
+Hard resetting via RTS pin...

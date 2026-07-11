@@ -1,0 +1,22 @@
+Command: ninja flash
+[1/11] Performing build step for 'bootloader'
+[1/1] C:\Windows\system32\cmd.exe /C "cd /D C:\Espressif\projects\Wasteland\build\bootloader\esp-idf\esptool_py && C:\Espressif\python_env\idf5.5_py3.12_env\Scripts\python.exe C:/Espressif/v5.5.3/components/partition_table/check_sizes.py --offset 0x8000 bootloader 0x2000 C:/Espressif/projects/Wasteland/build/bootloader/bootloader.bin"
+Bootloader binary size 0x5dd0 bytes. 0x230 bytes (2%) free.
+[2/11] No install step for 'bootloader'
+[3/11] Completed 'bootloader'
+[4/11] Building C object esp-idf/main/CMakeFiles/__idf_main.dir/modes/mode_log.c.obj
+[5/11] Building C object esp-idf/main/CMakeFiles/__idf_main.dir/modes/mode_geiger.c.obj
+[6/11] Linking C static library esp-idf\main\libmain.a
+[7/11] Generating esp-idf/esp_system/ld/sections.ld
+[8/11] Linking CXX executable Wasteland.elf
+FAILED: Wasteland.elf 
+C:\Windows\system32\cmd.exe /C "cd . && C:\Espressif\tools\riscv32-esp-elf\esp-14.2.0_20251107\riscv32-esp-elf\bin\riscv32-esp-elf-g++.exe -march=rv32imafc_zicsr_zifencei_xesploop_xespv -mabi=ilp32f -nostartfiles -march=rv32imafc_zicsr_zifencei_xesploop_xespv -mabi=ilp32f    -Wl,--cref -Wl,--defsym=IDF_TARGET_ESP32P4=0 -Wl,--Map=C:/Espressif/projects/Wasteland/build/Wasteland.map -Wl,--no-warn-rwx-segments -Wl,--orphan-handling=warn -fno-rtti -fno-lto -Wl,--gc-sections -Wl,--warn-common -T rom.api.ld -T esp32p4.peripherals.ld -T esp32p4.rom.ld -T esp32p4.rom.api.ld -T esp32p4.rom.rvfp.ld -T esp32p4.rom.wdt.ld -T esp32p4.rom.systimer.ld -T esp32p4.rom.version.ld -T esp32p4.rom.libc.ld -T esp32p4.rom.libc-suboptimal_for_misaligned_mem.ld -T esp32p4.rom.newlib.ld -T memory.ld -T sections.ld -Wl,--enable-non-contiguous-regions @CMakeFiles\Wasteland.elf.rsp -o Wasteland.elf && cd ."
+C:/Espressif/tools/riscv32-esp-elf/esp-14.2.0_20251107/riscv32-esp-elf/bin/../lib/gcc/riscv32-esp-elf/14.2.0/../../../../riscv32-esp-elf/bin/ld.exe: esp-idf/main/libmain.a(mode_geiger.c.obj): in function `history_timer_cb':
+C:/Espressif/projects/Wasteland/main/modes/mode_geiger.c:445:(.text.history_timer_cb+0x6e): undefined reference to `geiger_log_sample'
+C:/Espressif/tools/riscv32-esp-elf/esp-14.2.0_20251107/riscv32-esp-elf/bin/../lib/gcc/riscv32-esp-elf/14.2.0/../../../../riscv32-esp-elf/bin/ld.exe: esp-idf/main/libmain.a(mode_log.c.obj): in function `build_board_panel':
+C:/Espressif/projects/Wasteland/main/modes/mode_log.c:57:(.text.refresh_geiger_log_label+0x1a): undefined reference to `geiger_log_count'
+C:/Espressif/tools/riscv32-esp-elf/esp-14.2.0_20251107/riscv32-esp-elf/bin/../lib/gcc/riscv32-esp-elf/14.2.0/../../../../riscv32-esp-elf/bin/ld.exe: esp-idf/main/libmain.a(mode_log.c.obj): in function `refresh_geiger_log_label':
+C:/Espressif/projects/Wasteland/main/modes/mode_log.c:132:(.text.refresh_geiger_log_label+0xb8): undefined reference to `geiger_log_get'
+C:/Espressif/tools/riscv32-esp-elf/esp-14.2.0_20251107/riscv32-esp-elf/bin/../lib/gcc/riscv32-esp-elf/14.2.0/../../../../riscv32-esp-elf/bin/ld.exe: C:/Espressif/projects/Wasteland/main/modes/mode_log.c:134:(.text.refresh_geiger_log_label+0xc8): undefined reference to `geiger_log_format_line'
+collect2.exe: error: ld returned 1 exit status
+ninja: build stopped: subcommand failed.
