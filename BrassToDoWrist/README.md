@@ -76,6 +76,7 @@ Tasks are stored with the ESP32 `Preferences` library, so they persist across sl
 - **GPIO 2 (BUSY) and GPIO 9 (RST) are strapping pins** on the ESP32-C3. If the board won't enter bootloader mode or boots strangely, try disconnecting the display while flashing.
 - **Deep sleep is disabled by default** for easier debugging — set `DEBUG_DISABLE_DEEP_SLEEP = false` in `main.cpp` to enable the 1-minute auto-sleep for real battery use.
 - The QR code size is adjustable via `qrSize` (1–4) if your display or IP string needs more room.
+- - **Stuck, or built something cool?** Join us in [Discussions](https://github.com/cmoz/YouTube/discussions) — ask questions, share your builds, and suggest future videos.
 
 ## Make it yours
 
