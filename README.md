@@ -57,6 +57,8 @@ Most projects also work in the Arduino IDE. Open the `.ino` file, install the li
 
 Found a bug? Built a variation you're proud of? Open an issue or drop a comment on the video — I read them all. If a project won't compile, include your board, IDE/PlatformIO version, and the error message so I can help quickly.
 
+Questions about a build? Ask in [Discussions](https://github.com/cmoz/YouTube/discussions) and include your board, IDE, and error message.
+
 ## 📜 License
 
 Code is released under the MIT License — use it, remix it, wear it. If you build something with it, tag me. I genuinely love seeing what people make.
