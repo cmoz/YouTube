@@ -1,0 +1,85 @@
+#include <Arduino.h>
+#include <Wire.h>
+#include <Adafruit_GFX.h>
+#include <Adafruit_SSD1306.h>
+
+// Adjust these if your OLED is a different size
+#define SCREEN_WIDTH 128
+#define SCREEN_HEIGHT 64
+
+// If your OLED has no RESET pin, set to -1
+#define OLED_RESET    -1
+
+// Create display object
+Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
+
+// Define your I2C pins (adjust if needed for your board)
+#define I2C_SDA 6 //5
+#define I2C_SCL 7 //4
+
+int myPin = 1; // GPIO2 (pin 8 on DevKitM-1)
+bool touching = false;
+unsigned long touchStart = 0;
+
+void setup() {
+  Serial.begin(115200);
+  delay(1000);
+  // Initialize I2C with custom pins for ESP32-C3
+  Wire.begin(I2C_SDA, I2C_SCL);
+
+  // Initialize the display
+  if (!display.begin(SSD1306_SWITCHCAPVCC, 0x78)) { // 0x3C check your I2C address
+    Serial.println(F("SSD1306 allocation failed"));
+    while (1); // Don't proceed, loop forever
+  }
+  display.display(); // Show initial splash screen
+  delay(2000); // Pause for 2 seconds
+  pinMode(myPin, INPUT_PULLDOWN); // Prevents random fluctuations
+  // Set up the display
+  Serial.println("OLED Init success");
+  display.clearDisplay();
+  display.setTextSize(2);             // Draw 2X-scale text
+  display.setTextColor(SSD1306_WHITE);
+  display.setCursor(0, 10);
+  display.println("Hello!");
+  display.setTextSize(1);
+  display.setCursor(0, 40);
+  display.println("ESP32-C3 OLED");
+  display.display(); // Actually display all of the above
+}
+
+void loop() {
+  display.clearDisplay();
+  display.setTextSize(2);             // Draw 2X-scale text
+  display.setTextColor(SSD1306_WHITE);
+  display.setCursor(0, 10);
+  display.println("Hello!");
+  display.setTextSize(1);
+  display.setCursor(0, 40);
+  display.println("ESP32-C3 OLED");
+  display.display(); // Actually display all of the above
+  Serial.println("OLED loop Init success");
+  delay(10000);
+  /*
+  int sensorValue = analogRead(myPin);
+  
+  // Debug first!
+  Serial.print(sensorValue);
+  Serial.print(" - ");
+  
+  if (sensorValue > 1500) { // Adjust after seeing raw values
+    if (!touching) touchStart = millis();
+    touching = true;
+    
+    if (millis() - touchStart < 500) {
+      Serial.println("Tap");
+    } else {
+      Serial.println("Hold");
+    }
+  } else {
+    touching = false;
+    Serial.println("Released");
+  }
+  delay(100);
+  */
+}
