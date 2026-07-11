@@ -66,6 +66,7 @@ The logo lives in `CMozLogo.h` as a C array. To replace it with your own:
 - **Blank screen?** Check you're on 3.3V (not 5V), verify the pin table above, and watch the Serial Monitor for init messages. A long press on the ESP32's RST button often kicks it into life.
 - **Artifacts or a half-drawn image?** Your bitmap probably isn't exactly 250×122 — re-convert it at image2cpp.
 - **Tri-colour ePaper refreshes slowly** (a few seconds, with flashing). That's normal for this display technology, not a bug.
+- **Stuck, or built something cool?** Join us in [Discussions](https://github.com/cmoz/YouTube/discussions) — ask questions, share your builds, and suggest future videos.
 
 ## Make it yours
 
