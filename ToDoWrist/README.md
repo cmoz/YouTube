@@ -50,9 +50,7 @@ const char *ssid = "CHANGE THIS TO YOUR WIFI";
 const char *password = "CHANGE THIS TO YOUR PASSWORD";
 ```
 
-⚠️ **This file currently has real WiFi credentials hardcoded in it** — replace them with your own before uploading, and consider scrubbing them from git history if this repo is public.
-
-If it can't reach your WiFi, it falls back to access point mode — connect to the **Todo-Wrist** network (password: `tinkertailor`) and scan the QR code on the screen.
+⚠️ If it can't reach your WiFi, it falls back to access point mode — connect to the **Todo-Wrist** network (password: `tinkertailor`) and scan the QR code on the screen.
 
 Also update `upload_port` and `monitor_port` in `platformio.ini` to match your machine (they're set to `COM11`), and swap `webLogoUrl` for your own hosted image if you want a different hero logo on the web page.
 
