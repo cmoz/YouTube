@@ -3,7 +3,7 @@
 > A touch-set countdown timer for the classic "beat the clock through security" airport game: two capacitive touch pads on an Adafruit QT Py ESP32-S2 set the time, an OLED shows what's left, and a 4-pixel LED strip shifts from a calm pulse to a frantic red flash as your deadline closes in.
 
 📺 **Watch the build:** [CMozMaker on YouTube](https://www.youtube.com/@CMozMaker)
-🛒 **Get the parts:** [Tinker Tailor](https://tinkertailor.ca)
+🛒 **Get the parts:** [Tinker Tailor Kit for this project](https://www.tinkertailor.ca/products/flight-glove-video-kit-everything-used-in-the-build))
 
 ---
 
