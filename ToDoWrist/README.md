@@ -2,7 +2,7 @@
 
 > The base build behind [Brass To-Do Wrist](../BrassToDoWrist): a 2.13" tri-colour ePaper display on an ESP32-C3 Super Mini showing your top five tasks, set and ticked off from a phone web page, with a nicer web UI (style picker, animated checkmarks, a branded hero logo) than the brass-enclosure version and the same deep-sleep-until-touched power behaviour.
 
-📺 **Watch the build:** [CMozMaker on YouTube](https://www.youtube.com/@CMozMaker)
+📺 **Watch the build:** [CMozMaker on YouTube](https://youtu.be/dYDikwG_Oho) Brass version: [CMozMaker on YouTube](https://youtu.be/K9FJABPhAVQ)
 🛒 **Get the parts:** [Tinker Tailor](https://tinkertailor.ca)
 
 ---
