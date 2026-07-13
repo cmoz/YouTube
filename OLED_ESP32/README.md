@@ -3,7 +3,7 @@
 > A 128×64 SSD1306 OLED on an ESP32 driving a generative starburst-and-wave animation that flashes to a branded splash screen every ten seconds — plus a bonus alternate sketch that turns the same screen into a tiny WiFi message board you can post to from your phone.
 
 📺 **Watch the build:** [CMozMaker on YouTube](https://youtu.be/wiu2lC0JfTA)
-🛒 **Get the parts:** [Tinker Tailor](https://tinkertailor.ca)
+🛒 **Get the parts:** [Tinker Tailor](https://www.tinkertailor.ca/products/esp32-oled-video-kit-everything-used-in-the-build)
 
 ---
 
