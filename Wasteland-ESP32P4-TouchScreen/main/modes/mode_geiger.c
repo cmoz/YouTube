@@ -7,7 +7,7 @@
 #include "esp_log.h"
 #include "esp_timer.h"
 #include "geiger_log.h"
-#include "leds/ws2812.h"
+#include "leds/glow_engine.h"
 
 /* ------------------------------------------------------------------ */
 /* look constants — dark chassis with orange instrument outlines       */
@@ -652,33 +652,19 @@ static void jitter_timer_cb(lv_timer_t *t)
     update_needle();
 }
 
-/* green -> yellow -> red across the bar position, dim enough to read as
- * an instrument readout rather than a floodlight. three explicit bands:
- * green ramps in fast at the bottom, yellow now owns most of the scale
- * (roughly the middle 55%), and red only takes over right at the top.
- * yellow is also warmer/brighter (R above G, not just R==G) than a flat
- * (160,160) mix so it visually pops as its own color instead of reading
- * as a washed-out green. */
-#define LED_SCALE_GREEN_END  0.20f  /* green -> yellow ramp ends here */
-#define LED_SCALE_YELLOW_END 0.75f  /* yellow hold ends, red ramp begins */
-#define LED_SCALE_YELLOW_R   200    /* yellow's red channel -- above base green for a warm gold, not a flat green+red mix */
-#define LED_SCALE_BASE_G     160
+/* green -> yellow -> orange -> red across the bar position, as four
+ * flat, discrete bands rather than a continuous blend -- reads as
+ * distinct instrument steps instead of a smear. */
+#define LED_BAND_GREEN_END   0.33f  /* green owns the bottom third   */
+#define LED_BAND_YELLOW_END  0.55f  /* then yellow                   */
+#define LED_BAND_ORANGE_END  0.80f  /* then orange, red past this    */
 
 static void led_scale_color(float t, uint8_t *r, uint8_t *g, uint8_t *b)
 {
-    if (t < LED_SCALE_GREEN_END) {
-        float k = t / LED_SCALE_GREEN_END;
-        *r = (uint8_t)(k * LED_SCALE_YELLOW_R);
-        *g = LED_SCALE_BASE_G;
-    } else if (t < LED_SCALE_YELLOW_END) {
-        *r = LED_SCALE_YELLOW_R;
-        *g = LED_SCALE_BASE_G;
-    } else {
-        float k = (t - LED_SCALE_YELLOW_END) / (1.0f - LED_SCALE_YELLOW_END);
-        *r = (uint8_t)(LED_SCALE_YELLOW_R - k * (LED_SCALE_YELLOW_R - 180));
-        *g = (uint8_t)((1.0f - k) * LED_SCALE_BASE_G);
-    }
-    *b = 0;
+    if (t < LED_BAND_GREEN_END)       { *r = 0;   *g = 170; *b = 0; }
+    else if (t < LED_BAND_YELLOW_END) { *r = 200; *g = 160; *b = 0; }
+    else if (t < LED_BAND_ORANGE_END) { *r = 255; *g = 90;  *b = 0; }
+    else                               { *r = 220; *g = 0;   *b = 0; }
 }
 
 /* pegged at (or essentially at) the top of the scale -- reserved for
@@ -693,9 +679,14 @@ static void led_scale_color(float t, uint8_t *r, uint8_t *g, uint8_t *b)
 
 /* drives the WS2812B strip as a bar-graph twin of the needle: same
  * rate_cpm mapping, updated on the same 50ms cadence so it feels just
- * as responsive. goes solid red across every LED once a source is
- * close enough to trip the on-screen "SOURCE VERY CLOSE" warning, and
- * flashes deep purple once it's pegged at the very top of the scale. */
+ * as responsive. Driven purely off the (smoothed) rate_cpm level, same
+ * as the needle -- earlier this also force-lit every LED red the
+ * instant raw distance crossed a "hot" threshold, but since distance
+ * reacts immediately while rate_cpm eases toward its target, that made
+ * the strip jump straight to full red ahead of the bar catching up.
+ * The on-screen "SOURCE VERY CLOSE" warning already covers that instant
+ * cue, so the strip now just tracks the bar, and flashes deep purple
+ * once it's pegged at the very top of the scale. */
 static void update_led_scale(void)
 {
     float level = s.rate_cpm / DISTANCE_MAX_CPM;
@@ -703,32 +694,27 @@ static void update_led_scale(void)
     if (level > 1.0f) level = 1.0f;
 
     bool at_max = level >= LED_MAX_LEVEL_THRESHOLD;
-    bool hot = (s.last_distance_cm >= 0.0f) && (s.last_distance_cm <= DISTANCE_WARN_HOT_CM);
     bool flash_on = ((esp_timer_get_time() / LED_MAX_FLASH_PERIOD_US) % 2) == 0;
     int lit = (int)(level * WS2812_LED_COUNT + 0.5f);
 
     for (int i = 0; i < WS2812_LED_COUNT; i++) {
         if (at_max) {
             if (flash_on) {
-                ws2812_set_pixel(i, LED_COLOR_MAX_R, LED_COLOR_MAX_G, LED_COLOR_MAX_B);
+                glow_external_set_pixel(i, LED_COLOR_MAX_R, LED_COLOR_MAX_G, LED_COLOR_MAX_B);
             } else {
-                ws2812_set_pixel(i, 0, 0, 0);
+                glow_external_set_pixel(i, 0, 0, 0);
             }
             continue;
         }
-        if (hot) {
-            ws2812_set_pixel(i, 180, 0, 0);
-            continue;
-        }
         if (i >= lit) {
-            ws2812_set_pixel(i, 0, 0, 0);
+            glow_external_set_pixel(i, 0, 0, 0);
             continue;
         }
         uint8_t r, g, b;
         led_scale_color((float)i / (float)(WS2812_LED_COUNT - 1), &r, &g, &b);
-        ws2812_set_pixel(i, r, g, b);
+        glow_external_set_pixel(i, r, g, b);
     }
-    ws2812_refresh();
+    glow_external_commit();
 }
 
 /* washes a faint red tint over the whole screen as the reading climbs
@@ -1229,8 +1215,9 @@ static void root_delete_cb(lv_event_t *e)
 
     ESP_LOGI("mode_geiger", "cleanup fired: click_timer=%p rate_timer=%p", (void*)s.click_timer, (void*)s.rate_timer);
     audio_stop();
-    ws2812_clear();
-    ws2812_refresh();
+    glow_external_clear();
+    glow_external_commit();
+    glow_external_release();
     if (s.click_timer) {
         lv_timer_del(s.click_timer);
         s.click_timer = NULL;

@@ -49,11 +49,41 @@ static const char *s_social[] = {
     "To combat social isolation",
 };
 
+static const char *s_power[] = {
+    "Battery powered",
+    "Solar powered",
+    "USB powered",
+    "Hand-cranked",
+    "Kinetic/motion-charged",
+    "Wireless charging",
+};
+
+static const char *s_materials[] = {
+    "3D printed",
+    "Laser cut",
+    "Repurposed/upcycled",
+    "Conductive fabric",
+    "Cardboard/paper",
+    "Found objects/junk drawer",
+};
+
+static const char *s_constraint[] = {
+    "No screws or glue",
+    "One button only",
+    "Must fit in a pocket",
+    "Build it in under an hour",
+    "Only use what's already in your bin",
+    "No soldering allowed",
+};
+
 static const char *s_category_labels[PROMPT_CAT_COUNT] = {
     "SCALE",
     "INTERACTION",
     "THEME",
     "SOCIAL IMPACT",
+    "POWER SOURCE",
+    "MATERIALS",
+    "CONSTRAINT",
 };
 
 static const struct {
@@ -64,6 +94,9 @@ static const struct {
     [PROMPT_CAT_INTERACTION] = { s_interaction, sizeof(s_interaction) / sizeof(s_interaction[0]) },
     [PROMPT_CAT_THEME]       = { s_theme,       sizeof(s_theme) / sizeof(s_theme[0]) },
     [PROMPT_CAT_SOCIAL]      = { s_social,      sizeof(s_social) / sizeof(s_social[0]) },
+    [PROMPT_CAT_POWER]       = { s_power,       sizeof(s_power) / sizeof(s_power[0]) },
+    [PROMPT_CAT_MATERIALS]   = { s_materials,   sizeof(s_materials) / sizeof(s_materials[0]) },
+    [PROMPT_CAT_CONSTRAINT]  = { s_constraint,  sizeof(s_constraint) / sizeof(s_constraint[0]) },
 };
 
 const char *prompt_category_label(prompt_category_t category)

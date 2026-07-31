@@ -27,6 +27,7 @@ typedef enum {
     UI_SHELL_MODE_LOG,
     UI_SHELL_MODE_CMOZ,
     UI_SHELL_MODE_DEMO,
+    UI_SHELL_MODE_GLOW,
     UI_SHELL_MODE_COUNT
 } ui_shell_mode_t;
 

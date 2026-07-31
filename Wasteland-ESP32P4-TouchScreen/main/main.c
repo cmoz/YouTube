@@ -24,7 +24,9 @@
 #include "data/tutorial_list.h"
 #include "modes/mode_cmoz.h"
 #include "modes/mode_demo.h"
+#include "modes/mode_glow.h"
 #include "leds/ws2812.h"
+#include "leds/glow_engine.h"
 
 static const char *TAG = "MAIN";
 
@@ -56,6 +58,8 @@ static void on_nav_mode(ui_shell_mode_t mode, void *user_data)
         content = mode_cmoz_create(ui_shell_get_content_area());
     } else if (mode == UI_SHELL_MODE_DEMO) {
         content = mode_demo_create(ui_shell_get_content_area());
+    } else if (mode == UI_SHELL_MODE_GLOW) {
+        content = mode_glow_create(ui_shell_get_content_area());
     } else {
         content = mode_placeholder_create(ui_shell_get_content_area(), mode);
     }
@@ -126,6 +130,12 @@ ESP_LOGI(TAG, "Audio ok");
     err = ws2812_init();
     if (err == ESP_OK) {
         ESP_LOGI(TAG, "WS2812B ready on GPIO=%d, %d LEDs", WS2812_GPIO, WS2812_LED_COUNT);
+        err = glow_engine_start();
+        if (err == ESP_OK) {
+            ESP_LOGI(TAG, "Glow engine started");
+        } else {
+            ESP_LOGW(TAG, "Glow engine failed: %s", esp_err_to_name(err));
+        }
     } else {
         ESP_LOGW(TAG, "WS2812B init failed: %s (LED scale stays dark)", esp_err_to_name(err));
     }

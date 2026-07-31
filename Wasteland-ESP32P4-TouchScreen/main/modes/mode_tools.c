@@ -8,6 +8,8 @@
 #endif
 
 #define TOOLS_BODY_FONT LV_FONT_DEFAULT
+#define TOOLS_BIG_FONT  (&lv_font_montserrat_20)  /* resistor/power calc rows -- roomier than the default 14px */
+#define TOOLS_INNER_W   660                        /* centered content width for those two tabs */
 
 #define TOOLS_COLOR_BG    lv_color_hex(0x0a0a0a)
 #define TOOLS_COLOR_TXT   lv_color_hex(0x9a9a9a)
@@ -75,13 +77,13 @@ static lv_obj_t *make_spin_row(lv_obj_t *parent, const char *label,
     lv_obj_t *lbl = lv_label_create(parent);
     lv_label_set_text(lbl, label);
     lv_obj_set_style_text_color(lbl, TOOLS_COLOR_TXT, 0);
-    lv_obj_set_style_text_font(lbl, TOOLS_BODY_FONT, 0);
-    lv_obj_set_pos(lbl, 0, y + 10);
+    lv_obj_set_style_text_font(lbl, TOOLS_BIG_FONT, 0);
+    lv_obj_set_pos(lbl, 0, y + 14);
 
     lv_obj_t *dec = lv_obj_create(parent);
     lv_obj_remove_style_all(dec);
-    lv_obj_set_size(dec, 40, 36);
-    lv_obj_set_pos(dec, 240, y);
+    lv_obj_set_size(dec, 56, 48);
+    lv_obj_set_pos(dec, 430, y);
     lv_obj_set_style_bg_color(dec, lv_color_hex(0x1c1c1c), 0);
     lv_obj_set_style_bg_opa(dec, LV_OPA_COVER, 0);
     lv_obj_set_style_border_color(dec, TOOLS_COLOR_ACT, 0);
@@ -92,19 +94,20 @@ static lv_obj_t *make_spin_row(lv_obj_t *parent, const char *label,
     lv_obj_t *dl = lv_label_create(dec);
     lv_label_set_text(dl, "-");
     lv_obj_set_style_text_color(dl, TOOLS_COLOR_TXT, 0);
+    lv_obj_set_style_text_font(dl, TOOLS_BIG_FONT, 0);
     lv_obj_center(dl);
 
     lv_obj_t *val = lv_label_create(parent);
-    lv_obj_set_size(val, 60, 36);
-    lv_obj_set_pos(val, 290, y + 10);
+    lv_obj_set_size(val, 96, 48);
+    lv_obj_set_pos(val, 498, y + 12);
     lv_obj_set_style_text_color(val, TOOLS_COLOR_ACT, 0);
-    lv_obj_set_style_text_font(val, TOOLS_BODY_FONT, 0);
+    lv_obj_set_style_text_font(val, TOOLS_BIG_FONT, 0);
     lv_obj_set_style_text_align(val, LV_TEXT_ALIGN_CENTER, 0);
 
     lv_obj_t *inc = lv_obj_create(parent);
     lv_obj_remove_style_all(inc);
-    lv_obj_set_size(inc, 40, 36);
-    lv_obj_set_pos(inc, 360, y);
+    lv_obj_set_size(inc, 56, 48);
+    lv_obj_set_pos(inc, 604, y);
     lv_obj_set_style_bg_color(inc, lv_color_hex(0x1c1c1c), 0);
     lv_obj_set_style_bg_opa(inc, LV_OPA_COVER, 0);
     lv_obj_set_style_border_color(inc, TOOLS_COLOR_ACT, 0);
@@ -115,6 +118,7 @@ static lv_obj_t *make_spin_row(lv_obj_t *parent, const char *label,
     lv_obj_t *il = lv_label_create(inc);
     lv_label_set_text(il, "+");
     lv_obj_set_style_text_color(il, TOOLS_COLOR_TXT, 0);
+    lv_obj_set_style_text_font(il, TOOLS_BIG_FONT, 0);
     lv_obj_center(il);
 
     return val;
@@ -128,23 +132,28 @@ static lv_obj_t *build_resistor_panel(lv_obj_t *parent)
     lv_obj_remove_style_all(panel);
     lv_obj_set_size(panel, lv_pct(100), lv_pct(100));
     lv_obj_set_style_bg_opa(panel, LV_OPA_TRANSP, 0);
-    lv_obj_set_style_pad_all(panel, 12, 0);
     lv_obj_clear_flag(panel, LV_OBJ_FLAG_SCROLLABLE);
 
-    lv_obj_t *info = lv_label_create(panel);
+    lv_obj_t *inner = lv_obj_create(panel);
+    lv_obj_remove_style_all(inner);
+    lv_obj_set_size(inner, TOOLS_INNER_W, LV_SIZE_CONTENT);
+    lv_obj_align(inner, LV_ALIGN_TOP_MID, 0, 40);
+    lv_obj_clear_flag(inner, LV_OBJ_FLAG_SCROLLABLE);
+
+    lv_obj_t *info = lv_label_create(inner);
     lv_label_set_text(info, "R = (Vcc - Vf) / If");
     lv_obj_set_style_text_color(info, TOOLS_COLOR_TXT, 0);
-    lv_obj_set_style_text_font(info, TOOLS_BODY_FONT, 0);
+    lv_obj_set_style_text_font(info, TOOLS_BIG_FONT, 0);
     lv_obj_set_pos(info, 0, 0);
 
-    s_res_vcc_val = make_spin_row(panel, "Vcc (Supply V)", res_vcc_dec_cb, res_vcc_inc_cb, 34);
-    s_res_vf_val  = make_spin_row(panel, "Vf  (LED Fwd V)", res_vf_dec_cb,  res_vf_inc_cb,  80);
-    s_res_if_val  = make_spin_row(panel, "If  (LED mA)",    res_if_dec_cb,  res_if_inc_cb,  126);
+    s_res_vcc_val = make_spin_row(inner, "Vcc (Supply V)", res_vcc_dec_cb, res_vcc_inc_cb, 50);
+    s_res_vf_val  = make_spin_row(inner, "Vf  (LED Fwd V)", res_vf_dec_cb,  res_vf_inc_cb,  118);
+    s_res_if_val  = make_spin_row(inner, "If  (LED mA)",    res_if_dec_cb,  res_if_inc_cb,  186);
 
-    lv_obj_t *res_box = lv_obj_create(panel);
+    lv_obj_t *res_box = lv_obj_create(inner);
     lv_obj_remove_style_all(res_box);
-    lv_obj_set_size(res_box, 420, 44);
-    lv_obj_set_pos(res_box, 0, 180);
+    lv_obj_set_size(res_box, TOOLS_INNER_W, 56);
+    lv_obj_set_pos(res_box, 0, 262);
     lv_obj_set_style_bg_color(res_box, lv_color_hex(0x1c1c1c), 0);
     lv_obj_set_style_bg_opa(res_box, LV_OPA_COVER, 0);
     lv_obj_set_style_border_color(res_box, TOOLS_COLOR_ACT, 0);
@@ -153,14 +162,14 @@ static lv_obj_t *build_resistor_panel(lv_obj_t *parent)
 
     s_res_result_lbl = lv_label_create(res_box);
     lv_obj_set_style_text_color(s_res_result_lbl, TOOLS_COLOR_ACT, 0);
-    lv_obj_set_style_text_font(s_res_result_lbl, TOOLS_BODY_FONT, 0);
+    lv_obj_set_style_text_font(s_res_result_lbl, TOOLS_BIG_FONT, 0);
     lv_obj_center(s_res_result_lbl);
 
-    lv_obj_t *ref = lv_label_create(panel);
+    lv_obj_t *ref = lv_label_create(inner);
     lv_label_set_text(ref, "Common Vf: Red 1.8V  Green 2.1V  Blue 3.3V  White 3.3V  IR 1.2V");
     lv_obj_set_style_text_color(ref, TOOLS_COLOR_TXT, 0);
     lv_obj_set_style_text_font(ref, TOOLS_BODY_FONT, 0);
-    lv_obj_set_pos(ref, 0, 236);
+    lv_obj_set_pos(ref, 0, 332);
 
     update_resistor_result();
     return panel;
@@ -197,22 +206,27 @@ static lv_obj_t *build_power_panel(lv_obj_t *parent)
     lv_obj_remove_style_all(panel);
     lv_obj_set_size(panel, lv_pct(100), lv_pct(100));
     lv_obj_set_style_bg_opa(panel, LV_OPA_TRANSP, 0);
-    lv_obj_set_style_pad_all(panel, 12, 0);
     lv_obj_clear_flag(panel, LV_OBJ_FLAG_SCROLLABLE);
 
-    lv_obj_t *info = lv_label_create(panel);
+    lv_obj_t *inner = lv_obj_create(panel);
+    lv_obj_remove_style_all(inner);
+    lv_obj_set_size(inner, TOOLS_INNER_W, LV_SIZE_CONTENT);
+    lv_obj_align(inner, LV_ALIGN_TOP_MID, 0, 40);
+    lv_obj_clear_flag(inner, LV_OBJ_FLAG_SCROLLABLE);
+
+    lv_obj_t *info = lv_label_create(inner);
     lv_label_set_text(info, "P = V x I        V = I x R");
     lv_obj_set_style_text_color(info, TOOLS_COLOR_TXT, 0);
-    lv_obj_set_style_text_font(info, TOOLS_BODY_FONT, 0);
+    lv_obj_set_style_text_font(info, TOOLS_BIG_FONT, 0);
     lv_obj_set_pos(info, 0, 0);
 
-    s_pw_v_val = make_spin_row(panel, "Voltage (V)", pw_v_dec_cb, pw_v_inc_cb, 34);
-    s_pw_a_val = make_spin_row(panel, "Current (A)", pw_a_dec_cb, pw_a_inc_cb, 80);
+    s_pw_v_val = make_spin_row(inner, "Voltage (V)", pw_v_dec_cb, pw_v_inc_cb, 50);
+    s_pw_a_val = make_spin_row(inner, "Current (A)", pw_a_dec_cb, pw_a_inc_cb, 118);
 
-    lv_obj_t *res_box = lv_obj_create(panel);
+    lv_obj_t *res_box = lv_obj_create(inner);
     lv_obj_remove_style_all(res_box);
-    lv_obj_set_size(res_box, 420, 44);
-    lv_obj_set_pos(res_box, 0, 134);
+    lv_obj_set_size(res_box, TOOLS_INNER_W, 56);
+    lv_obj_set_pos(res_box, 0, 194);
     lv_obj_set_style_bg_color(res_box, lv_color_hex(0x1c1c1c), 0);
     lv_obj_set_style_bg_opa(res_box, LV_OPA_COVER, 0);
     lv_obj_set_style_border_color(res_box, TOOLS_COLOR_ACT, 0);
@@ -221,16 +235,16 @@ static lv_obj_t *build_power_panel(lv_obj_t *parent)
 
     s_pw_result_lbl = lv_label_create(res_box);
     lv_obj_set_style_text_color(s_pw_result_lbl, TOOLS_COLOR_ACT, 0);
-    lv_obj_set_style_text_font(s_pw_result_lbl, TOOLS_BODY_FONT, 0);
+    lv_obj_set_style_text_font(s_pw_result_lbl, TOOLS_BIG_FONT, 0);
     lv_obj_center(s_pw_result_lbl);
 
-    lv_obj_t *ws = lv_label_create(panel);
+    lv_obj_t *ws = lv_label_create(inner);
     lv_label_set_text(ws,
         "WS2812B: 1 LED full = 60mA @ 5V = 0.3W\n"
         "30 LEDs = 1.8A minimum PSU");
     lv_obj_set_style_text_color(ws, TOOLS_COLOR_TXT, 0);
     lv_obj_set_style_text_font(ws, TOOLS_BODY_FONT, 0);
-    lv_obj_set_pos(ws, 0, 190);
+    lv_obj_set_pos(ws, 0, 268);
 
     update_power_result();
     return panel;
@@ -568,6 +582,10 @@ lv_obj_t *mode_tools_create(lv_obj_t *parent)
     lv_obj_set_size(s.panel, lv_pct(100), lv_pct(100));
     lv_obj_set_style_bg_color(s.panel, TOOLS_COLOR_BG, 0);
     lv_obj_set_style_bg_opa(s.panel, LV_OPA_COVER, 0);
+    lv_obj_set_style_border_color(s.panel, TOOLS_COLOR_ACT, 0);
+    lv_obj_set_style_border_width(s.panel, 1, 0);
+    lv_obj_set_style_border_opa(s.panel, LV_OPA_COVER, 0);
+    lv_obj_set_style_pad_all(s.panel, 6, 0);
     lv_obj_set_flex_flow(s.panel, LV_FLEX_FLOW_COLUMN);
     lv_obj_clear_flag(s.panel, LV_OBJ_FLAG_SCROLLABLE);
     lv_obj_add_event_cb(s.panel, panel_delete_cb, LV_EVENT_DELETE, NULL);

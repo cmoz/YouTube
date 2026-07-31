@@ -348,7 +348,10 @@ lv_obj_t *mode_play_create(lv_obj_t *parent)
     lv_obj_set_style_radius(right_col, 4, 0);
     lv_obj_set_style_pad_all(right_col, 16, 0);
     lv_obj_set_flex_flow(right_col, LV_FLEX_FLOW_COLUMN);
-    lv_obj_clear_flag(right_col, LV_OBJ_FLAG_SCROLLABLE);
+    /* vertical scroll as a safety net, same reasoning as left_col -- 7
+     * categories may not all fit the visible height depending on how
+     * long the rolled prompt text wraps */
+    lv_obj_set_scroll_dir(right_col, LV_DIR_VER);
 
     lv_obj_t *right_header = lv_obj_create(right_col);
     lv_obj_remove_style_all(right_header);

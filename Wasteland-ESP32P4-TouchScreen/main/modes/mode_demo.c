@@ -1,6 +1,6 @@
 #include "mode_demo.h"
 
-#include "leds/ws2812.h"
+#include "leds/glow_engine.h"
 #include "ui/ui_shell.h"
 
 #if LV_FONT_MONTSERRAT_32
@@ -49,9 +49,9 @@ static void tick_timer_cb(lv_timer_t *t)
     for (int i = 0; i < WS2812_LED_COUNT; i++) {
         uint16_t hue = (s.base_hue + (i * 360) / WS2812_LED_COUNT) % 360;
         lv_color_t c = lv_color_hsv_to_rgb(hue, 100, 45);
-        ws2812_set_pixel(i, c.red, c.green, c.blue);
+        glow_external_set_pixel(i, c.red, c.green, c.blue);
     }
-    ws2812_refresh();
+    glow_external_commit();
 }
 
 static void glitch_timer_cb(lv_timer_t *t)
@@ -77,8 +77,9 @@ static void root_delete_cb(lv_event_t *e)
         lv_timer_del(s.glitch_timer);
         s.glitch_timer = NULL;
     }
-    ws2812_clear();
-    ws2812_refresh();
+    glow_external_clear();
+    glow_external_commit();
+    glow_external_release();
     s.root = NULL;
 }
 

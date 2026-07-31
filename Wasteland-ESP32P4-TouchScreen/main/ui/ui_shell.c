@@ -33,7 +33,7 @@ static const char *TAG = "ui_shell";
 #define UI_SHELL_COLOR_BOLT      lv_color_hex(0x4a4a4a)
 
 static const char *s_nav_labels[UI_SHELL_MODE_COUNT] = {
-    "TOOLS", "PLAY", "GEIGER", "LOG", "CMOZMAKER", "DEMO"
+    "TOOLS", "PLAY", "GEIGER", "LOG", "CMOZMAKER", "DEMO", "GLOW"
 };
 
 static struct {
