@@ -10,31 +10,39 @@
 #include "leds/glow_engine.h"
 
 /* ------------------------------------------------------------------ */
-/* look constants — dark chassis with orange instrument outlines       */
+/* look constants — dark chassis with worn amber/yellow instrument     */
+/* outlines, biohacking-placard palette                                */
 /* ------------------------------------------------------------------ */
 
-#define GEIGER_COLOR_ACCENT      lv_color_hex(0x00CFFF)
-#define GEIGER_COLOR_CASE        lv_color_hex(0x0D0D0D)
-#define GEIGER_COLOR_CASE_TRIM   GEIGER_COLOR_ACCENT
+#define GEIGER_COLOR_ACCENT      lv_color_hex(0xE8B923)
+#define GEIGER_COLOR_CASE        lv_color_hex(0xDDA52D)
+#define GEIGER_COLOR_CASE_TRIM   lv_color_hex(0x1B1300)
 #define GEIGER_COLOR_DIAL_BG     lv_color_hex(0x141414)
 #define GEIGER_COLOR_DIAL_BORDER GEIGER_COLOR_ACCENT
 #define GEIGER_COLOR_TICK        GEIGER_COLOR_ACCENT
-#define GEIGER_COLOR_NEEDLE      lv_color_hex(0x7FE8FF)
+#define GEIGER_COLOR_NEEDLE      lv_color_hex(0xFFDD55)
 #define GEIGER_COLOR_PIVOT       lv_color_hex(0x1C1C1C)
 #define GEIGER_COLOR_DIAL_LABEL  GEIGER_COLOR_ACCENT
 #define GEIGER_COLOR_KNOB        lv_color_hex(0x1A1A1A)
 #define GEIGER_COLOR_KNOB_ACTIVE lv_color_hex(0x2A2A2A)
+/* pale rim so the knob reads as a knob at rest -- CASE_TRIM (near-black)
+ * is invisible against the knob's own dark fill until knob_event_cb
+ * swaps it for the accent color on press. */
+#define GEIGER_COLOR_KNOB_RIM    lv_color_hex(0xC9AF6B)
 #define GEIGER_COLOR_TEXT_DARK   GEIGER_COLOR_ACCENT
-#define GEIGER_COLOR_TEXT_MUTED  lv_color_hex(0x47BFE8)
+#define GEIGER_COLOR_TEXT_MUTED  lv_color_hex(0xB5872A)
 #define GEIGER_COLOR_LED_OFF     lv_color_hex(0x261A12)
-#define GEIGER_COLOR_LED_ON      lv_color_hex(0x7FF4FF)
+#define GEIGER_COLOR_LED_ON      lv_color_hex(0xFFE680)
 #define GEIGER_COLOR_RAD_SYMBOL  GEIGER_COLOR_ACCENT
-#define GEIGER_COLOR_RAD_GLOW    lv_color_hex(0x0D3E58)
-#define GEIGER_COLOR_SPIKE       lv_color_hex(0x33D7FF)
-#define GEIGER_COLOR_CPM_FLASH   lv_color_hex(0xCCF7FF)
+#define GEIGER_COLOR_RAD_GLOW    lv_color_hex(0x4A3200)
+#define GEIGER_COLOR_SPIKE       lv_color_hex(0xFF5A1F)
+#define GEIGER_COLOR_CPM_FLASH   lv_color_hex(0xFFF6D9)
 
-#define CASE_W          640
-#define CASE_H          420
+/* matches the actual content area ui_shell hands us: 1024x600 screen
+ * minus bezel margin, nav bar, and nav gap (see build_content_area() in
+ * ui_shell.c) -- NOT the screen's raw 1024x600. */
+#define CASE_W          1008
+#define CASE_H          514
 #define DIAL_DIAMETER   280
 #define DIAL_PIVOT_X    132.0f
 #define DIAL_PIVOT_Y    130.0f
@@ -480,10 +488,14 @@ static lv_obj_t *build_history_chart(lv_obj_t *parent, lv_coord_t width)
     lv_obj_set_style_bg_opa(chart, LV_OPA_TRANSP, LV_PART_MAIN);
     lv_obj_set_style_border_width(chart, 0, LV_PART_MAIN);
     lv_obj_set_style_pad_all(chart, 0, LV_PART_MAIN);
-    lv_obj_set_style_line_width(chart, 2, LV_PART_ITEMS);
-    lv_obj_set_style_line_opa(chart, LV_OPA_70, LV_PART_ITEMS);
+    lv_obj_set_style_line_width(chart, 4, LV_PART_ITEMS);
+    lv_obj_set_style_line_opa(chart, LV_OPA_COVER, LV_PART_ITEMS);
 
-    lv_chart_series_t *series = lv_chart_add_series(chart, GEIGER_COLOR_TEXT_MUTED,
+    /* dark ink line, not the muted gold text color -- this chart sits
+     * with a transparent background directly over the yellow chassis,
+     * and gold-on-yellow all but disappears. near-black reads like a
+     * pen trace on the plate instead. */
+    lv_chart_series_t *series = lv_chart_add_series(chart, GEIGER_COLOR_CASE_TRIM,
                                                       LV_CHART_AXIS_PRIMARY_Y);
     for (int i = 0; i < HISTORY_LEN; i++) {
         lv_chart_set_next_value(chart, series, 0);
@@ -779,6 +791,113 @@ static void click_timer_cb(lv_timer_t *t)
 }
 
 /* ------------------------------------------------------------------ */
+/* worn-plate flourishes -- corner rivets on the boxy instrument panels */
+/* ------------------------------------------------------------------ */
+
+#define RIVET_SIZE   6
+#define RIVET_INSET  4
+
+/* four small bolt-head dots pinned to a panel's TRUE corners, like a
+ * stamped metal plate screwed to the chassis. panel must be a plain box
+ * (no dense corner content) -- IGNORE_LAYOUT keeps these out of flex
+ * flow so they don't disturb the panel's real children.
+ *
+ * same content-area-relative quirk as add_recessed_bevel() above: a
+ * plain corner align lands RIVET_INSET past the padding boundary, not
+ * past the panel's real edge, which for any real amount of padding
+ * puts the "rivet" well inside the panel instead of near its corner.
+ * pad_x/pad_y (the panel's own padding) push it back out first, then
+ * RIVET_INSET nudges it in slightly from the true corner. */
+static void add_corner_rivets(lv_obj_t *panel, lv_coord_t pad_x, lv_coord_t pad_y)
+{
+    static const lv_align_t corners[4] = {
+        LV_ALIGN_TOP_LEFT, LV_ALIGN_TOP_RIGHT, LV_ALIGN_BOTTOM_LEFT, LV_ALIGN_BOTTOM_RIGHT
+    };
+
+    for (int i = 0; i < 4; i++) {
+        bool left = (corners[i] == LV_ALIGN_TOP_LEFT || corners[i] == LV_ALIGN_BOTTOM_LEFT);
+        bool top  = (corners[i] == LV_ALIGN_TOP_LEFT || corners[i] == LV_ALIGN_TOP_RIGHT);
+
+        lv_obj_t *rivet = lv_obj_create(panel);
+        lv_obj_remove_style_all(rivet);
+        lv_obj_set_size(rivet, RIVET_SIZE, RIVET_SIZE);
+        lv_obj_set_style_radius(rivet, LV_RADIUS_CIRCLE, 0);
+        lv_obj_set_style_bg_color(rivet, lv_color_hex(0x2A2A2A), 0);
+        lv_obj_set_style_bg_opa(rivet, LV_OPA_COVER, 0);
+        lv_obj_set_style_border_color(rivet, GEIGER_COLOR_CASE_TRIM, 0);
+        lv_obj_set_style_border_width(rivet, 1, 0);
+        lv_obj_set_style_border_opa(rivet, LV_OPA_40, 0);
+        lv_obj_clear_flag(rivet, LV_OBJ_FLAG_SCROLLABLE);
+        lv_obj_clear_flag(rivet, LV_OBJ_FLAG_CLICKABLE);
+        lv_obj_add_flag(rivet, LV_OBJ_FLAG_IGNORE_LAYOUT);
+        lv_obj_align(rivet, corners[i],
+                     left ? (RIVET_INSET - pad_x) : (pad_x - RIVET_INSET),
+                     top  ? (RIVET_INSET - pad_y) : (pad_y - RIVET_INSET));
+    }
+}
+
+#define BEVEL_LINE_THICKNESS 3
+#define BEVEL_SHADOW_OPA     LV_OPA_50
+#define BEVEL_HIGHLIGHT_OPA  LV_OPA_20
+
+/* four hairlines hugging a panel's TRUE outer edge -- dark along the
+ * top/left (as if the rim above and to the side is casting a shadow
+ * into the recess) and a warm highlight along the bottom/right (where
+ * light catches the far inner rim). Reads as the panel sitting recessed
+ * into the chassis rather than stuck flat on top of it.
+ *
+ * lv_pct() and lv_obj_align() both resolve against the PARENT'S CONTENT
+ * AREA (padding already subtracted) -- see lv_obj_get_content_width()
+ * in lv_obj_pos.c -- not the panel's full outer bounds. With a plain
+ * align+0-offset these lines land exactly on the padding/content
+ * boundary, i.e. right where the panel's own text starts, and no amount
+ * of extra padding moves them apart since both slide inward together.
+ * pad_x/pad_y are the panel's own padding, used here to push each line
+ * back out past that boundary to the panel's real edge. */
+static void add_recessed_bevel(lv_obj_t *panel, lv_coord_t pad_x, lv_coord_t pad_y)
+{
+    lv_obj_t *shadow_top = lv_obj_create(panel);
+    lv_obj_remove_style_all(shadow_top);
+    lv_obj_set_size(shadow_top, lv_pct(100), BEVEL_LINE_THICKNESS);
+    lv_obj_set_style_bg_color(shadow_top, lv_color_black(), 0);
+    lv_obj_set_style_bg_opa(shadow_top, BEVEL_SHADOW_OPA, 0);
+    lv_obj_clear_flag(shadow_top, LV_OBJ_FLAG_SCROLLABLE);
+    lv_obj_clear_flag(shadow_top, LV_OBJ_FLAG_CLICKABLE);
+    lv_obj_add_flag(shadow_top, LV_OBJ_FLAG_IGNORE_LAYOUT);
+    lv_obj_align(shadow_top, LV_ALIGN_TOP_MID, 0, -pad_y);
+
+    lv_obj_t *shadow_left = lv_obj_create(panel);
+    lv_obj_remove_style_all(shadow_left);
+    lv_obj_set_size(shadow_left, BEVEL_LINE_THICKNESS, lv_pct(100));
+    lv_obj_set_style_bg_color(shadow_left, lv_color_black(), 0);
+    lv_obj_set_style_bg_opa(shadow_left, BEVEL_SHADOW_OPA, 0);
+    lv_obj_clear_flag(shadow_left, LV_OBJ_FLAG_SCROLLABLE);
+    lv_obj_clear_flag(shadow_left, LV_OBJ_FLAG_CLICKABLE);
+    lv_obj_add_flag(shadow_left, LV_OBJ_FLAG_IGNORE_LAYOUT);
+    lv_obj_align(shadow_left, LV_ALIGN_LEFT_MID, -pad_x, 0);
+
+    lv_obj_t *highlight_bottom = lv_obj_create(panel);
+    lv_obj_remove_style_all(highlight_bottom);
+    lv_obj_set_size(highlight_bottom, lv_pct(100), BEVEL_LINE_THICKNESS);
+    lv_obj_set_style_bg_color(highlight_bottom, lv_color_hex(0xFFF3C4), 0);
+    lv_obj_set_style_bg_opa(highlight_bottom, BEVEL_HIGHLIGHT_OPA, 0);
+    lv_obj_clear_flag(highlight_bottom, LV_OBJ_FLAG_SCROLLABLE);
+    lv_obj_clear_flag(highlight_bottom, LV_OBJ_FLAG_CLICKABLE);
+    lv_obj_add_flag(highlight_bottom, LV_OBJ_FLAG_IGNORE_LAYOUT);
+    lv_obj_align(highlight_bottom, LV_ALIGN_BOTTOM_MID, 0, pad_y);
+
+    lv_obj_t *highlight_right = lv_obj_create(panel);
+    lv_obj_remove_style_all(highlight_right);
+    lv_obj_set_size(highlight_right, BEVEL_LINE_THICKNESS, lv_pct(100));
+    lv_obj_set_style_bg_color(highlight_right, lv_color_hex(0xFFF3C4), 0);
+    lv_obj_set_style_bg_opa(highlight_right, BEVEL_HIGHLIGHT_OPA, 0);
+    lv_obj_clear_flag(highlight_right, LV_OBJ_FLAG_SCROLLABLE);
+    lv_obj_clear_flag(highlight_right, LV_OBJ_FLAG_CLICKABLE);
+    lv_obj_add_flag(highlight_right, LV_OBJ_FLAG_IGNORE_LAYOUT);
+    lv_obj_align(highlight_right, LV_ALIGN_RIGHT_MID, pad_x, 0);
+}
+
+/* ------------------------------------------------------------------ */
 /* dial construction helpers                                            */
 /* ------------------------------------------------------------------ */
 
@@ -860,6 +979,7 @@ static lv_obj_t *build_dial(lv_obj_t *parent)
     lv_obj_t *dial_caption = lv_label_create(dial);
     lv_label_set_text(dial_caption, "CPM");
     lv_obj_set_style_text_color(dial_caption, GEIGER_COLOR_DIAL_LABEL, 0);
+    lv_obj_set_style_text_letter_space(dial_caption, 2, 0);
     lv_obj_align(dial_caption, LV_ALIGN_BOTTOM_MID, 0, -8);
 
     /* Reintroduce a soft top gloss for a glass-covered dial feel. */
@@ -892,7 +1012,7 @@ static void knob_event_cb(lv_event_t *e)
     if (lv_event_get_code(e) == LV_EVENT_RELEASED) {
         lv_obj_set_style_bg_color(knob, GEIGER_COLOR_KNOB, 0);
         lv_obj_set_style_outline_width(knob, 1, 0);
-        lv_obj_set_style_outline_color(knob, GEIGER_COLOR_CASE_TRIM, 0);
+        lv_obj_set_style_outline_color(knob, GEIGER_COLOR_KNOB_RIM, 0);
         lv_obj_set_style_outline_opa(knob, LV_OPA_40, 0);
         return;
     }
@@ -927,11 +1047,11 @@ static void build_knob(lv_obj_t *parent, const char *label_text, knob_action_t a
     lv_obj_set_style_bg_opa(knob, LV_OPA_COVER, 0);
     lv_obj_set_style_bg_grad_color(knob, lv_color_hex(0x111111), 0);
     lv_obj_set_style_bg_grad_dir(knob, LV_GRAD_DIR_VER, 0);
-    lv_obj_set_style_border_color(knob, GEIGER_COLOR_CASE_TRIM, 0);
+    lv_obj_set_style_border_color(knob, GEIGER_COLOR_KNOB_RIM, 0);
     lv_obj_set_style_border_width(knob, 2, 0);
     lv_obj_set_style_outline_width(knob, 1, 0);
     lv_obj_set_style_outline_pad(knob, 1, 0);
-    lv_obj_set_style_outline_color(knob, GEIGER_COLOR_CASE_TRIM, 0);
+    lv_obj_set_style_outline_color(knob, GEIGER_COLOR_KNOB_RIM, 0);
     lv_obj_set_style_outline_opa(knob, LV_OPA_40, 0);
     lv_obj_add_flag(knob, LV_OBJ_FLAG_CLICKABLE);
     lv_obj_add_event_cb(knob, knob_event_cb, LV_EVENT_PRESSED, (void *)(intptr_t)action);
@@ -966,8 +1086,8 @@ static void build_radiation_badge(lv_obj_t *parent)
     lv_obj_set_style_border_color(panel, GEIGER_COLOR_CASE_TRIM, 0);
     lv_obj_set_style_border_width(panel, 1, 0);
     lv_obj_set_style_radius(panel, 0, 0);
-    lv_obj_set_style_pad_hor(panel, 10, 0);
-    lv_obj_set_style_pad_ver(panel, 8, 0);
+    lv_obj_set_style_pad_hor(panel, 18, 0);
+    lv_obj_set_style_pad_ver(panel, 16, 0);
     lv_obj_set_style_pad_row(panel, 4, 0);
     lv_obj_set_flex_flow(panel, LV_FLEX_FLOW_COLUMN);
     lv_obj_set_flex_align(panel, LV_FLEX_ALIGN_CENTER, LV_FLEX_ALIGN_CENTER, LV_FLEX_ALIGN_CENTER);
@@ -979,6 +1099,7 @@ static void build_radiation_badge(lv_obj_t *parent)
     lv_label_set_text(top_label, "NUKA CHECK");
     lv_obj_set_style_text_color(top_label, GEIGER_COLOR_TEXT_DARK, 0);
     lv_obj_set_style_text_font(top_label, &lv_font_montserrat_14, 0);
+    lv_obj_set_style_text_letter_space(top_label, 2, 0);
 
     lv_obj_t *badge = lv_obj_create(panel);
     lv_obj_remove_style_all(badge);
@@ -998,6 +1119,7 @@ static void build_radiation_badge(lv_obj_t *parent)
     lv_label_set_text(bottom_label, "RAD");
     lv_obj_set_style_text_color(bottom_label, GEIGER_COLOR_TEXT_DARK, 0);
     lv_obj_set_style_text_font(bottom_label, &lv_font_montserrat_14, 0);
+    lv_obj_set_style_text_letter_space(bottom_label, 2, 0);
 
     /* true trefoil proportions: 60-degree blades, 60-degree gaps,
      * evenly spaced. lv_arc still draws these as bands not tapered
@@ -1028,6 +1150,9 @@ static void build_radiation_badge(lv_obj_t *parent)
     lv_obj_set_style_bg_color(dot, GEIGER_COLOR_RAD_SYMBOL, 0);
     lv_obj_set_style_bg_opa(dot, LV_OPA_COVER, 0);
     lv_obj_center(dot);
+
+    add_corner_rivets(panel, 18, 16);
+    add_recessed_bevel(panel, 18, 16);
 }
 
 /* ------------------------------------------------------------------ */
@@ -1039,6 +1164,24 @@ static void build_radiation_badge(lv_obj_t *parent)
 #define CRT_SCANLINE_COUNT      140  /* covers ~560px; harmless if it overshoots the ~514px content area, extras are just clipped */
 #define CRT_SCANLINE_OPA        LV_OPA_20
 #define CRT_VIGNETTE_LAYER_OPA  LV_OPA_20
+/* kept deliberately sparse -- this whole overlay sits under several
+ * full-screen alpha layers (click flash, danger tint, flicker dip) that
+ * already force frequent full-screen redraws on a DPI panel with no
+ * hard vsync handshake, and click_flash retriggers on every detected
+ * click -- which, at point-blank sensor range, is near-continuous by
+ * design (see poisson_interval_ms()'s floor). Too many extra small
+ * objects here means every one of those rapid-fire redraws costs more,
+ * which can measurably slow the whole LVGL timer loop -- including the
+ * rate_cpm ramp this overlay has nothing to do with -- right when the
+ * click rate (and redraw rate) is highest. Kept minimal for that reason,
+ * not just to avoid a stale-frame flash. */
+#define GRUNGE_SPECKLE_COUNT    8
+
+#define TORN_EDGE_STEP_MIN_PX   70
+#define TORN_EDGE_STEP_MAX_PX   100
+#define TORN_EDGE_BITE_MIN_PX   4
+#define TORN_EDGE_BITE_MAX_PX   10
+#define TORN_EDGE_JITTER_PX     6  /* how far a bite can stray off the edge line */
 
 #define SCAN_BEAM_TRAVEL_PX     540  /* a bit past the ~514px content area so it fully exits before wrapping */
 #define SCAN_BEAM_PERIOD_MS     3200
@@ -1051,6 +1194,38 @@ static void scan_beam_anim_cb(void *var, int32_t v)
     lv_obj_set_y(s.scan_beam_core, v);
     lv_obj_set_y(s.scan_beam_trail1, v - SCAN_BEAM_TRAIL1_GAP_PX);
     lv_obj_set_y(s.scan_beam_trail2, v - SCAN_BEAM_TRAIL2_GAP_PX);
+}
+
+/* a run of small black "bites" straddling one edge of the case -- like
+ * paint chipped away along a stamped plate's rim, exposing dark metal
+ * underneath. horizontal runs sit along the top/bottom edges (fixed_coord
+ * is the y of that edge); vertical runs sit along left/right (fixed_coord
+ * is the x). random spacing/size/jitter so no two edges read identically. */
+static void add_torn_edge_bites(lv_obj_t *overlay, bool horizontal, int32_t fixed_coord, int32_t run_length)
+{
+    int32_t pos = 0;
+    while (pos < run_length) {
+        int32_t step   = TORN_EDGE_STEP_MIN_PX + (int32_t)(esp_random() % (TORN_EDGE_STEP_MAX_PX - TORN_EDGE_STEP_MIN_PX));
+        int32_t bite   = TORN_EDGE_BITE_MIN_PX + (int32_t)(esp_random() % (TORN_EDGE_BITE_MAX_PX - TORN_EDGE_BITE_MIN_PX));
+        int32_t jitter = (int32_t)(esp_random() % (2 * TORN_EDGE_JITTER_PX + 1)) - TORN_EDGE_JITTER_PX;
+
+        lv_obj_t *bite_obj = lv_obj_create(overlay);
+        lv_obj_remove_style_all(bite_obj);
+        lv_obj_set_size(bite_obj, bite, bite);
+        lv_obj_set_style_radius(bite_obj, LV_RADIUS_CIRCLE, 0);
+        lv_obj_set_style_bg_color(bite_obj, lv_color_black(), 0);
+        lv_obj_set_style_bg_opa(bite_obj, LV_OPA_COVER, 0);
+        lv_obj_clear_flag(bite_obj, LV_OBJ_FLAG_SCROLLABLE);
+        lv_obj_clear_flag(bite_obj, LV_OBJ_FLAG_CLICKABLE);
+
+        if (horizontal) {
+            lv_obj_set_pos(bite_obj, pos, fixed_coord + jitter - bite / 2);
+        } else {
+            lv_obj_set_pos(bite_obj, fixed_coord + jitter - bite / 2, pos);
+        }
+
+        pos += step;
+    }
 }
 
 static void build_crt_overlay(lv_obj_t *parent)
@@ -1093,6 +1268,31 @@ static void build_crt_overlay(lv_obj_t *parent)
             lv_obj_align(blob, vignette_corners[c], left ? -r / 2 : r / 2, top ? -r / 2 : r / 2);
         }
     }
+
+    /* grunge speckles -- sparse dark flecks scattered across the whole
+     * case, like grime/paint-wear freckles on an old stamped panel.
+     * regenerated (new random positions) every time the mode is entered.
+     * kept low-opacity so it never competes with real content. */
+    for (int i = 0; i < GRUNGE_SPECKLE_COUNT; i++) {
+        lv_obj_t *speck = lv_obj_create(overlay);
+        lv_obj_remove_style_all(speck);
+        int32_t sz = 2 + (int32_t)(esp_random() % 3);
+        lv_obj_set_size(speck, sz, sz);
+        lv_obj_set_style_radius(speck, LV_RADIUS_CIRCLE, 0);
+        lv_obj_set_style_bg_color(speck, lv_color_black(), 0);
+        lv_obj_set_style_bg_opa(speck, LV_OPA_10 + (esp_random() % LV_OPA_20), 0);
+        lv_obj_clear_flag(speck, LV_OBJ_FLAG_SCROLLABLE);
+        lv_obj_clear_flag(speck, LV_OBJ_FLAG_CLICKABLE);
+        lv_obj_set_pos(speck, (int32_t)(esp_random() % (CASE_W - sz)), (int32_t)(esp_random() % (CASE_H - sz)));
+    }
+
+    /* torn edge -- ragged black bites along all four sides of the case,
+     * like chipped paint on an old stamped plate rather than a clean
+     * rectangle. */
+    add_torn_edge_bites(overlay, true, 0, CASE_W);        /* top    */
+    add_torn_edge_bites(overlay, true, CASE_H, CASE_W);   /* bottom */
+    add_torn_edge_bites(overlay, false, 0, CASE_H);       /* left   */
+    add_torn_edge_bites(overlay, false, CASE_W, CASE_H);  /* right  */
 
     /* danger tint -- full-screen red wash, opacity driven live by
      * update_danger_tint() as rate_cpm climbs. starts fully transparent. */
@@ -1326,7 +1526,7 @@ lv_obj_t *mode_geiger_create(lv_obj_t *parent)
     lv_obj_set_style_border_color(dial_box, GEIGER_COLOR_CASE_TRIM, 0);
     lv_obj_set_style_border_width(dial_box, 1, 0);
     lv_obj_set_style_radius(dial_box, 0, 0);
-    lv_obj_set_style_pad_all(dial_box, 12, 0);
+    lv_obj_set_style_pad_all(dial_box, 22, 0);
     lv_obj_set_flex_flow(dial_box, LV_FLEX_FLOW_COLUMN);
     lv_obj_set_flex_align(dial_box, LV_FLEX_ALIGN_CENTER, LV_FLEX_ALIGN_CENTER, LV_FLEX_ALIGN_CENTER);
     lv_obj_set_style_pad_row(dial_box, 8, 0);
@@ -1340,6 +1540,8 @@ lv_obj_t *mode_geiger_create(lv_obj_t *parent)
     lv_obj_set_style_text_font(cpm_label, &lv_font_montserrat_48, 0);
     lv_obj_set_style_pad_top(cpm_label, 4, 0);
     s.cpm_label = cpm_label;
+    add_corner_rivets(dial_box, 22, 22);
+    add_recessed_bevel(dial_box, 22, 22);
 
     s.history_chart = build_history_chart(root, lv_pct(100));
     lv_obj_add_flag(s.history_chart, LV_OBJ_FLAG_IGNORE_LAYOUT);
@@ -1350,6 +1552,10 @@ lv_obj_t *mode_geiger_create(lv_obj_t *parent)
     lv_obj_remove_style_all(right_col);
     lv_obj_set_size(right_col, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
     lv_obj_set_style_bg_opa(right_col, LV_OPA_TRANSP, 0);
+    /* nudged left, off the right edge -- the radiation badge is pinned
+     * to the bottom-right corner (see build_radiation_badge) and was
+     * crowding this column when it sat flush against its flex slot. */
+    lv_obj_set_style_translate_x(right_col, -160, 0);
     lv_obj_set_flex_flow(right_col, LV_FLEX_FLOW_COLUMN);
     lv_obj_set_flex_align(right_col, LV_FLEX_ALIGN_CENTER, LV_FLEX_ALIGN_CENTER, LV_FLEX_ALIGN_CENTER);
     lv_obj_set_style_pad_row(right_col, 20, 0);
@@ -1363,7 +1569,7 @@ lv_obj_t *mode_geiger_create(lv_obj_t *parent)
     lv_obj_set_style_border_color(control_box, GEIGER_COLOR_CASE_TRIM, 0);
     lv_obj_set_style_border_width(control_box, 1, 0);
     lv_obj_set_style_radius(control_box, 0, 0);
-    lv_obj_set_style_pad_all(control_box, 12, 0);
+    lv_obj_set_style_pad_all(control_box, 22, 0);
     lv_obj_set_flex_flow(control_box, LV_FLEX_FLOW_COLUMN);
     lv_obj_set_flex_align(control_box, LV_FLEX_ALIGN_CENTER, LV_FLEX_ALIGN_CENTER, LV_FLEX_ALIGN_CENTER);
     lv_obj_set_style_pad_row(control_box, 8, 0);
@@ -1373,6 +1579,7 @@ lv_obj_t *mode_geiger_create(lv_obj_t *parent)
     lv_label_set_text(control_title, "CONTROLS");
     lv_obj_set_style_text_color(control_title, GEIGER_COLOR_TEXT_DARK, 0);
     lv_obj_set_style_text_font(control_title, &lv_font_montserrat_16, 0);
+    lv_obj_set_style_text_letter_space(control_title, 2, 0);
 
     lv_obj_t *knob_row = lv_obj_create(control_box);
     lv_obj_remove_style_all(knob_row);
@@ -1385,10 +1592,19 @@ lv_obj_t *mode_geiger_create(lv_obj_t *parent)
 
     build_knob(knob_row, "ZERO", KNOB_ACTION_ZERO);
     build_knob(knob_row, "CHECK", KNOB_ACTION_CHECK);
+    add_corner_rivets(control_box, 22, 22);
+    add_recessed_bevel(control_box, 22, 22);
 
     lv_obj_t *count_label = lv_label_create(right_col);
     lv_label_set_text(count_label, "COUNTS: 0");
     lv_obj_set_style_text_color(count_label, GEIGER_COLOR_TEXT_MUTED, 0);
+    /* small dark backing chip -- this label sits directly on the yellow
+     * chassis (right_col itself is transparent), and muted gold text
+     * has poor contrast straight against yellow without one. */
+    lv_obj_set_style_bg_color(count_label, lv_color_hex(0x101010), 0);
+    lv_obj_set_style_bg_opa(count_label, LV_OPA_COVER, 0);
+    lv_obj_set_style_pad_hor(count_label, 8, 0);
+    lv_obj_set_style_pad_ver(count_label, 4, 0);
     s.count_label = count_label;
 
     /* activity LED, top-left of case, ignores flex flow */
@@ -1409,13 +1625,17 @@ lv_obj_t *mode_geiger_create(lv_obj_t *parent)
      * glance. */
     lv_obj_t *sensor_box = lv_obj_create(geiger_case);
     lv_obj_remove_style_all(sensor_box);
-    lv_obj_set_size(sensor_box, 190, 80);
+    /* size and padding grown together (both +6 over the last pass) so
+     * the inner content area -- where DIST/value actually sit -- stays
+     * exactly the size it was; only the margin out to the bevel edge
+     * grows. */
+    lv_obj_set_size(sensor_box, 216, 104);
     lv_obj_set_style_bg_color(sensor_box, lv_color_hex(0x101010), 0);
     lv_obj_set_style_bg_opa(sensor_box, LV_OPA_COVER, 0);
     lv_obj_set_style_border_color(sensor_box, GEIGER_COLOR_CASE_TRIM, 0);
     lv_obj_set_style_border_width(sensor_box, 1, 0);
     lv_obj_set_style_border_opa(sensor_box, LV_OPA_60, 0);
-    lv_obj_set_style_pad_all(sensor_box, 8, 0);
+    lv_obj_set_style_pad_all(sensor_box, 18, 0);
     lv_obj_clear_flag(sensor_box, LV_OBJ_FLAG_SCROLLABLE);
     lv_obj_add_flag(sensor_box, LV_OBJ_FLAG_IGNORE_LAYOUT);
     lv_obj_align(sensor_box, LV_ALIGN_TOP_RIGHT, -8, 26);
@@ -1424,6 +1644,7 @@ lv_obj_t *mode_geiger_create(lv_obj_t *parent)
     lv_label_set_text(sensor_title, "DIST");
     lv_obj_set_style_text_color(sensor_title, GEIGER_COLOR_TEXT_MUTED, 0);
     lv_obj_set_style_text_font(sensor_title, &lv_font_montserrat_16, 0);
+    lv_obj_set_style_text_letter_space(sensor_title, 2, 0);
     lv_obj_align(sensor_title, LV_ALIGN_TOP_LEFT, 0, 0);
 
     lv_obj_t *sensor_value = lv_label_create(sensor_box);
@@ -1432,12 +1653,23 @@ lv_obj_t *mode_geiger_create(lv_obj_t *parent)
     lv_obj_set_style_text_font(sensor_value, &lv_font_montserrat_32, 0);
     lv_obj_align(sensor_value, LV_ALIGN_BOTTOM_LEFT, 0, 0);
     s.sensor_value_label = sensor_value;
+    add_corner_rivets(sensor_box, 18, 18);
+    add_recessed_bevel(sensor_box, 18, 18);
 
-    /* warning banner for random spikes or live proximity detection */
+    /* warning banner for random spikes or live proximity detection --
+     * given its own dark backing chip for the same reason as count_label
+     * above: it sits straight on the yellow chassis, and needs the
+     * contrast to read as an alert rather than blend into the plate. */
     lv_obj_t *spike_label = lv_label_create(geiger_case);
     lv_label_set_text(spike_label, "WARNING: SOURCE DETECTED");
     lv_obj_set_style_text_color(spike_label, GEIGER_COLOR_SPIKE, 0);
     lv_obj_set_style_text_font(spike_label, &lv_font_montserrat_16, 0);
+    lv_obj_set_style_bg_color(spike_label, lv_color_hex(0x101010), 0);
+    lv_obj_set_style_bg_opa(spike_label, LV_OPA_COVER, 0);
+    lv_obj_set_style_border_color(spike_label, GEIGER_COLOR_CASE_TRIM, 0);
+    lv_obj_set_style_border_width(spike_label, 1, 0);
+    lv_obj_set_style_pad_hor(spike_label, 10, 0);
+    lv_obj_set_style_pad_ver(spike_label, 4, 0);
     lv_obj_add_flag(spike_label, LV_OBJ_FLAG_IGNORE_LAYOUT);
     lv_obj_add_flag(spike_label, LV_OBJ_FLAG_HIDDEN);
     lv_obj_align(spike_label, LV_ALIGN_TOP_MID, 0, 8);
