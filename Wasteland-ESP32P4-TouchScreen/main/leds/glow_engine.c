@@ -13,10 +13,11 @@ static const char *TAG = "glow";
 
 #define GLOW_FPS        50
 #define GLOW_FRAME_MS   (1000 / GLOW_FPS)
+#define GLOW_DEFAULT_EFFECT 10  /* Regalia -- this board's ambient default, see below */
 
 static glow_ctx_t        s_ctx;
 static SemaphoreHandle_t s_lock;
-static int               s_effect      = 0;
+static int               s_effect      = GLOW_DEFAULT_EFFECT;
 static uint8_t           s_brightness  = 160;
 static uint16_t          s_budget_ma   = 450;
 static uint16_t          s_est_ma      = 0;
@@ -313,7 +314,40 @@ static void fx_morse_render(glow_ctx_t *c)
     }
 }
 
-/* ── effect table (CMozGlow effect order, for parity) ────────────── */
+/* ── effect 10: Regalia — slow blue <-> gold breathing fade ─────── */
+/* not one of the CMozGlow ports -- added as this board's own ambient
+ * default, matched to the bag's blue-and-gold colourway. Fixed palette
+ * (not swatch-driven) since the whole point is the two specific
+ * colours; pick a swatch on Solid/Catwalk/etc. if you want a single
+ * flat colour instead. */
+#define REGALIA_BLUE_R  30
+#define REGALIA_BLUE_G  90
+#define REGALIA_BLUE_B  255
+#define REGALIA_GOLD_R  255
+#define REGALIA_GOLD_G  170
+#define REGALIA_GOLD_B  20
+#define GLOW_TWO_PI 6.283185307f
+
+static void fx_regalia_render(glow_ctx_t *c)
+{
+    /* full blue->gold->blue cycle length: ~12s at speed 1 (dreamy)
+     * down to ~3s at speed 10 (party) */
+    float period_ms = 13000.0f - (float)c->speed * 1000.0f;
+    float phase = fmodf((float)(c->frame * GLOW_FRAME_MS), period_ms) / period_ms;
+    /* 0.5-0.5*cos gives a smooth ease that starts and ends at the same
+     * value (blue), so the loop point never jumps */
+    float mix = 0.5f - 0.5f * cosf(phase * GLOW_TWO_PI);
+
+    uint8_t r = (uint8_t)(REGALIA_BLUE_R + (REGALIA_GOLD_R - REGALIA_BLUE_R) * mix);
+    uint8_t g = (uint8_t)(REGALIA_BLUE_G + (REGALIA_GOLD_G - REGALIA_BLUE_G) * mix);
+    uint8_t b = (uint8_t)(REGALIA_BLUE_B + (REGALIA_GOLD_B - REGALIA_BLUE_B) * mix);
+
+    for (int i = 0; i < WS2812_LED_COUNT; i++) {
+        c->fb[i][0] = r; c->fb[i][1] = g; c->fb[i][2] = b;
+    }
+}
+
+/* ── effect table (CMozGlow ports first for parity, Regalia last) ── */
 static const glow_effect_t s_effects[] = {
     { "Solid",     "steady colour",                              true,  NULL, fx_solid_render     },
     { "Sequin",    "random glints, like sequins catching light", true,  NULL, fx_sequin_render    },
@@ -325,7 +359,10 @@ static const glow_effect_t s_effects[] = {
     { "Ember",     "warm campfire glow",                          false, NULL, fx_ember_render     },
     { "Aurora",    "northern lights",                             false, NULL, fx_aurora_render    },
     { "Morse",     "blinks a real Morse-code message",            true,  NULL, fx_morse_render     },
+    { "Regalia",   "slow blue -- gold breathing fade",            false, NULL, fx_regalia_render   },
 };
+_Static_assert(GLOW_DEFAULT_EFFECT == (int)(sizeof(s_effects) / sizeof(s_effects[0])) - 1,
+               "GLOW_DEFAULT_EFFECT index no longer points at Regalia -- update it");
 
 #define GLOW_EFFECT_TOTAL (sizeof(s_effects) / sizeof(s_effects[0]))
 
