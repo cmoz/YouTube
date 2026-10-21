@@ -44,3 +44,7 @@ Picking an expression pauses the automatic cycle for 10 seconds.
 ![ESP32 to GC9A01 pin diagram](pin-diagram.png)
 
 The diagram doesn't show the backlight pin: if your display has a **BL** pin, connect it to 3.3V.
+
+## Questions?
+
+Ask on the [discussion board](https://github.com/cmoz/YouTube/discussions).

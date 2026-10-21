@@ -11,3 +11,7 @@ If the screen glitches, lower the SPI speed in `setup()` from `gfx->begin(800000
 ![ESP32 to GC9A01 pin diagram](Screenshot%202026-10-21%20132453.png)
 
 The diagram doesn't show the backlight pin: if your display has a **BL** pin, connect it to 3.3V.
+
+## Questions?
+
+Ask on the [discussion board](https://github.com/cmoz/YouTube/discussions).
