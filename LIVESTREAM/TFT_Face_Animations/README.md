@@ -38,3 +38,9 @@ Picking an expression pauses the automatic cycle for 10 seconds.
 - **New expression:** add a row to `EXPRESSIONS` (eye size, eyelids, mouth curve, mouth opening, blush) and put it in `SEQUENCE`.
 - **Colours:** change `FACE_COLOUR`, `BLUSH_COLOUR` and the `CAT_*` constants.
 - **Redrawing the cat:** edit `CAT_SPRITE`. Each character is one pixel: `O` outline, `o` fur, `d` stripe, `w` white, `p` pink, `e` eye. Keep every row 16 characters wide.
+
+## Need help with the wiring?
+
+![ESP32 to GC9A01 pin diagram](pin-diagram.png)
+
+The diagram doesn't show the backlight pin: if your display has a **BL** pin, connect it to 3.3V.
