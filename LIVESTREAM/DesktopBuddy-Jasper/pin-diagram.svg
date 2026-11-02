@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 460" font-family="Helvetica, Arial, sans-serif" font-size="14">
+  <rect width="760" height="460" fill="#ffffff"/>
+  <text x="380" y="30" text-anchor="middle" font-size="20" font-weight="bold" fill="#222">Desktop Buddy wiring</text>
+
+  <!-- ESP32 -->
+  <rect x="300" y="60" width="160" height="370" rx="10" fill="#1f2a44"/>
+  <text x="380" y="88" text-anchor="middle" fill="#ffffff" font-weight="bold">ESP32 DevKit</text>
+  <g fill="#ffffff" font-size="13">
+    <text x="312" y="128">3V3</text>
+    <text x="312" y="158">GND</text>
+    <text x="312" y="188">GPIO 18</text>
+    <text x="312" y="218">GPIO 23</text>
+    <text x="312" y="248">GPIO 5</text>
+    <text x="312" y="278">GPIO 21</text>
+    <text x="312" y="308">GPIO 4</text>
+    <text x="312" y="338">GPIO 22</text>
+    <text x="448" y="198" text-anchor="end">GPIO 32</text>
+    <text x="448" y="268" text-anchor="end">GPIO 33</text>
+    <text x="448" y="338" text-anchor="end">GPIO 27</text>
+  </g>
+
+  <!-- Display -->
+  <rect x="40" y="90" width="150" height="270" rx="10" fill="#2b2b2b"/>
+  <rect x="58" y="108" width="114" height="80" fill="#6ee1ff"/>
+  <text x="115" y="153" text-anchor="middle" font-size="12" fill="#1f2a44">1.44" TFT</text>
+  <g fill="#ffffff" font-size="13" text-anchor="end">
+    <text x="180" y="210">Vin</text>
+    <text x="180" y="228">GND</text>
+    <text x="180" y="246">SCK</text>
+    <text x="180" y="264">SI</text>
+    <text x="180" y="282">TCS</text>
+    <text x="180" y="300">D/C</text>
+    <text x="180" y="318">RST</text>
+    <text x="180" y="336">Lite</text>
+  </g>
+
+  <!-- Display wires -->
+  <g stroke-width="3" fill="none">
+    <path d="M190 205 H240 V124 H300" stroke="#e53935"/>
+    <path d="M190 223 H248 V154 H300" stroke="#222222"/>
+    <path d="M190 241 H256 V184 H300" stroke="#fb8c00"/>
+    <path d="M190 259 H264 V214 H300" stroke="#fdd835"/>
+    <path d="M190 277 H272 V244 H300" stroke="#43a047"/>
+    <path d="M190 295 H280 V274 H300" stroke="#1e88e5"/>
+    <path d="M190 313 H300 V304" stroke="#8e24aa"/>
+    <path d="M190 331 H300 V334" stroke="#00897b"/>
+  </g>
+
+  <!-- Touch pads -->
+  <g font-size="13">
+    <rect x="580" y="170" width="140" height="44" rx="8" fill="#ff8fb4"/>
+    <text x="650" y="197" text-anchor="middle" fill="#222" font-weight="bold">Tickle pad</text>
+    <rect x="580" y="240" width="140" height="44" rx="8" fill="#ffd54f"/>
+    <text x="650" y="267" text-anchor="middle" fill="#222" font-weight="bold">Stocks pad</text>
+    <rect x="580" y="310" width="140" height="44" rx="8" fill="#9be7a0"/>
+    <text x="650" y="337" text-anchor="middle" fill="#222" font-weight="bold">Vibes pad</text>
+  </g>
+  <g stroke-width="3" fill="none">
+    <path d="M460 194 H580" stroke="#d81b60"/>
+    <path d="M460 264 H580" stroke="#f9a825"/>
+    <path d="M460 334 H580" stroke="#2e7d32"/>
+  </g>
+  <text x="650" y="380" text-anchor="middle" font-size="12" fill="#555">Conductive fabric, one wire each.</text>
+  <text x="650" y="396" text-anchor="middle" font-size="12" fill="#555">Keep the pads apart from each other.</text>
+
+  <text x="115" y="390" text-anchor="middle" font-size="12" fill="#555">SO and CCS (SD card): not connected</text>
+  <text x="115" y="406" text-anchor="middle" font-size="12" fill="#555">3V3 pin: not connected (it's an output)</text>
+</svg>
